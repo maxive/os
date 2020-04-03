@@ -1,3 +1,3 @@
-FROM rancher/os-base
+FROM maxive/os-base
 COPY . /
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]

@@ -5,9 +5,9 @@ import (
 	"log"
 	"strings"
 
-	"github.com/rancher/os/config/cloudinit/datasource"
-	"github.com/rancher/os/config/cloudinit/datasource/metadata"
-	"github.com/rancher/os/pkg/netconf"
+	"github.com/maxive/os/config/cloudinit/datasource"
+	"github.com/maxive/os/config/cloudinit/datasource/metadata"
+	"github.com/maxive/os/pkg/netconf"
 )
 
 const (

@@ -5,9 +5,9 @@ package selinux
 import (
 	"io/ioutil"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/selinux"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/selinux"
 )
 
 func Initialize(c *config.CloudConfig) (*config.CloudConfig, error) {

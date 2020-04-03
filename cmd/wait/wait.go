@@ -3,9 +3,9 @@ package wait
 import (
 	"os"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/docker"
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/docker"
+	"github.com/maxive/os/pkg/log"
 )
 
 func Main() {

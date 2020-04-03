@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
 )
 
 func BootstrapMain() {
@@ -25,35 +25,35 @@ func BootstrapMain() {
 	log.Debugf("bootstrapAction: loadingConfig")
 	cfg := config.LoadConfig()
 
-	log.Debugf("bootstrapAction: Rngd(%v)", cfg.Rancher.State.Rngd)
-	if cfg.Rancher.State.Rngd {
+	log.Debugf("bootstrapAction: Rngd(%v)", cfg.Maxive.State.Rngd)
+	if cfg.Maxive.State.Rngd {
 		if err := runRngd(); err != nil {
 			log.Errorf("Failed to run rngd: %v", err)
 		}
 	}
 
-	log.Debugf("bootstrapAction: MdadmScan(%v)", cfg.Rancher.State.MdadmScan)
-	if cfg.Rancher.State.MdadmScan {
+	log.Debugf("bootstrapAction: MdadmScan(%v)", cfg.Maxive.State.MdadmScan)
+	if cfg.Maxive.State.MdadmScan {
 		if err := mdadmScan(); err != nil {
 			log.Errorf("Failed to run mdadm scan: %v", err)
 		}
 	}
 
-	log.Debugf("bootstrapAction: cryptsetup(%v)", cfg.Rancher.State.Cryptsetup)
-	if cfg.Rancher.State.Cryptsetup {
+	log.Debugf("bootstrapAction: cryptsetup(%v)", cfg.Maxive.State.Cryptsetup)
+	if cfg.Maxive.State.Cryptsetup {
 		if err := cryptsetup(); err != nil {
 			log.Errorf("Failed to run cryptsetup: %v", err)
 		}
 	}
 
-	log.Debugf("bootstrapAction: LvmScan(%v)", cfg.Rancher.State.LvmScan)
-	if cfg.Rancher.State.LvmScan {
+	log.Debugf("bootstrapAction: LvmScan(%v)", cfg.Maxive.State.LvmScan)
+	if cfg.Maxive.State.LvmScan {
 		if err := vgchange(); err != nil {
 			log.Errorf("Failed to run vgchange: %v", err)
 		}
 	}
 
-	stateScript := cfg.Rancher.State.Script
+	stateScript := cfg.Maxive.State.Script
 	log.Debugf("bootstrapAction: stateScript(%v)", stateScript)
 	if stateScript != "" {
 		if err := runStateScript(stateScript); err != nil {
@@ -67,13 +67,13 @@ func BootstrapMain() {
 		log.Error(err)
 	}
 
-	if cfg.Rancher.State.Dev != "" && cfg.Rancher.State.Wait {
+	if cfg.Maxive.State.Dev != "" && cfg.Maxive.State.Wait {
 		waitForRoot(cfg)
 	}
 
-	if len(cfg.Rancher.State.Autoformat) > 0 {
-		log.Infof("bootstrap container: Autoformat(%v) as %s", cfg.Rancher.State.Autoformat, "ext4")
-		if err := autoformat(cfg.Rancher.State.Autoformat); err != nil {
+	if len(cfg.Maxive.State.Autoformat) > 0 {
+		log.Infof("bootstrap container: Autoformat(%v) as %s", cfg.Maxive.State.Autoformat, "ext4")
+		if err := autoformat(cfg.Maxive.State.Autoformat); err != nil {
 			log.Errorf("Failed to run autoformat: %v", err)
 		}
 	}
@@ -161,7 +161,7 @@ func runStateScript(script string) error {
 func waitForRoot(cfg *config.CloudConfig) {
 	var dev string
 	for i := 0; i < 30; i++ {
-		dev = util.ResolveDevice(cfg.Rancher.State.Dev)
+		dev = util.ResolveDevice(cfg.Maxive.State.Dev)
 		if dev != "" {
 			break
 		}

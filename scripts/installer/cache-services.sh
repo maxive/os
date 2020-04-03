@@ -2,8 +2,8 @@
 set -e -x
 
 root="/mnt/install"
-cache="/var/lib/rancher/cache"
-preload="/var/lib/rancher/preload/system-docker"
+cache="/var/lib/maxive/cache"
+preload="/var/lib/maxive/preload/system-docker"
 
 partition=$1
 images=$2

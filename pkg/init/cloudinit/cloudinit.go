@@ -5,17 +5,17 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/compose"
-	"github.com/rancher/os/pkg/init/docker"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/sysinit"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/compose"
+	"github.com/maxive/os/pkg/init/docker"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/sysinit"
+	"github.com/maxive/os/pkg/util"
 )
 
 func CloudInit(cfg *config.CloudConfig) (*config.CloudConfig, error) {
 	stateConfig := config.LoadConfigWithPrefix(config.StateDir)
-	cfg.Rancher.CloudInit.Datasources = stateConfig.Rancher.CloudInit.Datasources
+	cfg.Maxive.CloudInit.Datasources = stateConfig.Maxive.CloudInit.Datasources
 
 	hypervisor := util.GetHypervisor()
 	if hypervisor == "" {
@@ -25,7 +25,7 @@ func CloudInit(cfg *config.CloudConfig) (*config.CloudConfig, error) {
 	}
 	if hypervisor == "vmware" {
 		// add vmware to the end - we don't want to over-ride an choices the user has made
-		cfg.Rancher.CloudInit.Datasources = append(cfg.Rancher.CloudInit.Datasources, hypervisor)
+		cfg.Maxive.CloudInit.Datasources = append(cfg.Maxive.CloudInit.Datasources, hypervisor)
 	}
 
 	exoscale, err := onlyExoscale()
@@ -33,7 +33,7 @@ func CloudInit(cfg *config.CloudConfig) (*config.CloudConfig, error) {
 		log.Error(err)
 	}
 	if exoscale {
-		cfg.Rancher.CloudInit.Datasources = append([]string{"exoscale"}, cfg.Rancher.CloudInit.Datasources...)
+		cfg.Maxive.CloudInit.Datasources = append([]string{"exoscale"}, cfg.Maxive.CloudInit.Datasources...)
 	}
 
 	proxmox, err := onlyProxmox()
@@ -41,14 +41,14 @@ func CloudInit(cfg *config.CloudConfig) (*config.CloudConfig, error) {
 		log.Error(err)
 	}
 	if proxmox {
-		cfg.Rancher.CloudInit.Datasources = append([]string{"proxmox"}, cfg.Rancher.CloudInit.Datasources...)
+		cfg.Maxive.CloudInit.Datasources = append([]string{"proxmox"}, cfg.Maxive.CloudInit.Datasources...)
 	}
 
-	if len(cfg.Rancher.CloudInit.Datasources) == 0 {
+	if len(cfg.Maxive.CloudInit.Datasources) == 0 {
 		log.Info("No specific datasources, ignore cloudinit")
 		return cfg, nil
 	}
-	if onlyConfigDrive(cfg.Rancher.CloudInit.Datasources) {
+	if onlyConfigDrive(cfg.Maxive.CloudInit.Datasources) {
 		configDev := util.ResolveDevice("LABEL=config-2")
 		if configDev == "" {
 			// Check v9fs: https://www.kernel.org/doc/Documentation/filesystems/9p.txt
@@ -60,39 +60,39 @@ func CloudInit(cfg *config.CloudConfig) (*config.CloudConfig, error) {
 		}
 	}
 
-	if err := config.Set("rancher.cloud_init.datasources", cfg.Rancher.CloudInit.Datasources); err != nil {
+	if err := config.Set("maxive.cloud_init.datasources", cfg.Maxive.CloudInit.Datasources); err != nil {
 		log.Error(err)
 	}
 
-	if stateConfig.Rancher.Network.DHCPTimeout > 0 {
-		cfg.Rancher.Network.DHCPTimeout = stateConfig.Rancher.Network.DHCPTimeout
-		if err := config.Set("rancher.network.dhcp_timeout", stateConfig.Rancher.Network.DHCPTimeout); err != nil {
+	if stateConfig.Maxive.Network.DHCPTimeout > 0 {
+		cfg.Maxive.Network.DHCPTimeout = stateConfig.Maxive.Network.DHCPTimeout
+		if err := config.Set("maxive.network.dhcp_timeout", stateConfig.Maxive.Network.DHCPTimeout); err != nil {
 			log.Error(err)
 		}
 	}
 
-	if len(stateConfig.Rancher.Network.WifiNetworks) > 0 {
-		cfg.Rancher.Network.WifiNetworks = stateConfig.Rancher.Network.WifiNetworks
-		if err := config.Set("rancher.network.wifi_networks", stateConfig.Rancher.Network.WifiNetworks); err != nil {
+	if len(stateConfig.Maxive.Network.WifiNetworks) > 0 {
+		cfg.Maxive.Network.WifiNetworks = stateConfig.Maxive.Network.WifiNetworks
+		if err := config.Set("maxive.network.wifi_networks", stateConfig.Maxive.Network.WifiNetworks); err != nil {
 			log.Error(err)
 		}
 	}
 
-	if len(stateConfig.Rancher.Network.Interfaces) > 0 {
+	if len(stateConfig.Maxive.Network.Interfaces) > 0 {
 		// DO also uses static networking, but this IP may change if:
 		// 1. not using Floating IP
 		// 2. creating a droplet with a snapshot, the snapshot cached the previous IP
-		if onlyDigitalOcean(cfg.Rancher.CloudInit.Datasources) {
+		if onlyDigitalOcean(cfg.Maxive.CloudInit.Datasources) {
 			log.Info("Do not use the previous network settings on DigitalOcean")
 		} else {
-			cfg.Rancher.Network = stateConfig.Rancher.Network
-			if err := config.Set("rancher.network", stateConfig.Rancher.Network); err != nil {
+			cfg.Maxive.Network = stateConfig.Maxive.Network
+			if err := config.Set("maxive.network", stateConfig.Maxive.Network); err != nil {
 				log.Error(err)
 			}
 		}
 	}
 
-	log.Infof("init, runCloudInitServices(%v)", cfg.Rancher.CloudInit.Datasources)
+	log.Infof("init, runCloudInitServices(%v)", cfg.Maxive.CloudInit.Datasources)
 	if err := runCloudInitServices(cfg); err != nil {
 		log.Error(err)
 	}
@@ -121,7 +121,7 @@ func runCloudInitServices(cfg *config.CloudConfig) error {
 
 func runCloudInitServiceSet(cfg *config.CloudConfig) (*config.CloudConfig, error) {
 	log.Info("Running cloud-init services")
-	_, err := compose.RunServiceSet("cloud-init", cfg, cfg.Rancher.CloudInitServices)
+	_, err := compose.RunServiceSet("cloud-init", cfg, cfg.Maxive.CloudInitServices)
 	return cfg, err
 }
 

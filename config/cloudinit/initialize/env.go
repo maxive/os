@@ -21,9 +21,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/rancher/os/config/cloudinit/config"
-	"github.com/rancher/os/config/cloudinit/datasource"
-	"github.com/rancher/os/config/cloudinit/system"
+	"github.com/maxive/os/config/cloudinit/config"
+	"github.com/maxive/os/config/cloudinit/datasource"
+	"github.com/maxive/os/config/cloudinit/system"
 )
 
 const DefaultSSHKeyName = "coreos-cloudinit"

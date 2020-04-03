@@ -17,7 +17,7 @@ package test
 import (
 	"fmt"
 
-	"github.com/rancher/os/config/cloudinit/pkg"
+	"github.com/maxive/os/config/cloudinit/pkg"
 )
 
 type HTTPClient struct {

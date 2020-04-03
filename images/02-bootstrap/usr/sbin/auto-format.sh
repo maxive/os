@@ -25,14 +25,14 @@ for dev in ${DEVS[@]}; do
             mkdir -p /mnt/new-root
             mount -t ext4 ${dev} /mnt/new-root
             pushd /mnt/new-root
-            mkdir -p ./var/lib/rancher/conf/cloud-config.d
+            mkdir -p ./var/lib/maxive/conf/cloud-config.d
             echo $(tar -xvf /userdata.tar)
             AUTHORIZED_KEY1=$(cat ./.ssh/authorized_keys)
             AUTHORIZED_KEY2=$(cat ./.ssh/authorized_keys2)
-            tee ./var/lib/rancher/conf/cloud-config.d/machine.yml << EOF
+            tee ./var/lib/maxive/conf/cloud-config.d/machine.yml << EOF
 #cloud-config
 
-rancher:
+maxive:
  network:
   interfaces:
    eth0:

@@ -29,7 +29,7 @@ openvt -s -- tail -f log &
 mount -t 9p -o trans=virtio,version=9p2000.L config-2 /mnt
 
 # use the install tarball in the iso
-ros install -d /dev/vda -f --no-reboot --append "console=ttyS0 rancher.autologin=ttyS0" >> /mnt/log 2>&1
+ros install -d /dev/vda -f --no-reboot --append "console=ttyS0 maxive.autologin=ttyS0" >> /mnt/log 2>&1
 
 touch /mnt/success
 EOF
@@ -39,7 +39,7 @@ qemu-img create -f qcow2 build/hd.img 8G
 qemu-system-${QEMUARCH} -serial mon:stdio \
     -enable-kvm \
     -drive if=virtio,file=build/hd.img \
-    -boot d -cdrom ./dist/artifacts/rancheros.iso \
+    -boot d -cdrom ./dist/artifacts/maxiveos.iso \
     -m 2048 \
     -smp 1 \
     -nographic \
@@ -52,4 +52,4 @@ qemu-system-${QEMUARCH} -serial mon:stdio \
 
 mkdir -p state
 cp build/hd.img state/hd.img
-echo "------------------------ RancherOS installed to hd.img."
+echo "------------------------ MaxiveOS installed to hd.img."

@@ -3,10 +3,10 @@ package compose
 import (
 	"fmt"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/docker"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util/network"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/docker"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util/network"
 
 	yaml "github.com/cloudfoundry-incubator/candiedyaml"
 	composeConfig "github.com/docker/libcompose/config"
@@ -69,17 +69,17 @@ func LoadSpecialService(p *project.Project, cfg *config.CloudConfig, serviceName
 }
 
 func loadConsoleService(cfg *config.CloudConfig, p *project.Project) error {
-	if cfg.Rancher.Console == "" || cfg.Rancher.Console == "default" {
+	if cfg.Maxive.Console == "" || cfg.Maxive.Console == "default" {
 		return nil
 	}
-	return LoadSpecialService(p, cfg, "console", cfg.Rancher.Console)
+	return LoadSpecialService(p, cfg, "console", cfg.Maxive.Console)
 }
 
 func loadEngineService(cfg *config.CloudConfig, p *project.Project) error {
-	if cfg.Rancher.Docker.Engine == "" || cfg.Rancher.Docker.Engine == cfg.Rancher.Defaults.Docker.Engine {
+	if cfg.Maxive.Docker.Engine == "" || cfg.Maxive.Docker.Engine == cfg.Maxive.Defaults.Docker.Engine {
 		return nil
 	}
-	return LoadSpecialService(p, cfg, "docker", cfg.Rancher.Docker.Engine)
+	return LoadSpecialService(p, cfg, "docker", cfg.Maxive.Docker.Engine)
 }
 
 func projectReload(p *project.Project, useNetwork *bool, loadConsole bool, environmentLookup *docker.ConfigEnvironment, authLookup *docker.ConfigAuthLookup) func() error {
@@ -90,9 +90,9 @@ func projectReload(p *project.Project, useNetwork *bool, loadConsole bool, envir
 		environmentLookup.SetConfig(cfg)
 		authLookup.SetConfig(cfg)
 
-		enabled = addServices(p, enabled, cfg.Rancher.Services)
+		enabled = addServices(p, enabled, cfg.Maxive.Services)
 
-		for service, serviceEnabled := range cfg.Rancher.ServicesInclude {
+		for service, serviceEnabled := range cfg.Maxive.ServicesInclude {
 			if _, ok := enabled[service]; ok || !serviceEnabled {
 				continue
 			}
@@ -113,12 +113,12 @@ func projectReload(p *project.Project, useNetwork *bool, loadConsole bool, envir
 
 		if loadConsole {
 			if err := loadConsoleService(cfg, p); err != nil {
-				log.Errorf("Failed to load rancher.console=(%s): %v", cfg.Rancher.Console, err)
+				log.Errorf("Failed to load maxive.console=(%s): %v", cfg.Maxive.Console, err)
 			}
 		}
 
 		if err := loadEngineService(cfg, p); err != nil {
-			log.Errorf("Failed to load rancher.docker.engine=(%s): %v", cfg.Rancher.Docker.Engine, err)
+			log.Errorf("Failed to load maxive.docker.engine=(%s): %v", cfg.Maxive.Docker.Engine, err)
 		}
 
 		return nil

@@ -11,7 +11,7 @@ sigProcess() {
 trap sigProcess SIGINT SIGKILL SIGTERM
 
 read_policy() {
-    policy=`ros c get rancher.upgrade.policy`
+    policy=`ros c get maxive.upgrade.policy`
     if [[ -z ${policy} ]]; then
         echo "can not read upgrade.policy"
         return 1

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util/network"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util/network"
 
 	"github.com/docker/docker/layer"
 	dockerclient "github.com/docker/engine-api/client"
@@ -61,7 +61,7 @@ func (s *Service) missingImage() bool {
 
 	// If it is already built-in, we should use tag image
 	// use case: open-vmtools with another REGISTRY_DOMAIN setting
-	registryDomain := config.LoadConfig().Rancher.Environment["REGISTRY_DOMAIN"]
+	registryDomain := config.LoadConfig().Maxive.Environment["REGISTRY_DOMAIN"]
 	if registryDomain != "docker.io" && strings.Index(image, registryDomain) >= 0 {
 		orginImage := strings.SplitN(image, "/", 2)[1]
 		_, _, err := client.ImageInspectWithRaw(context.Background(), orginImage, false)
@@ -130,8 +130,8 @@ func (s *Service) shouldRebuild(ctx context.Context) (bool, error) {
 		if newRebuildLabel == "always" {
 			return true, nil
 		}
-		if s.Name() == "console" && cfg.Rancher.ForceConsoleRebuild {
-			if err := config.Set("rancher.force_console_rebuild", false); err != nil {
+		if s.Name() == "console" && cfg.Maxive.ForceConsoleRebuild {
+			if err := config.Set("maxive.force_console_rebuild", false); err != nil {
 				return false, err
 			}
 			return true, nil
@@ -157,7 +157,7 @@ func (s *Service) Up(ctx context.Context, options options.Up) error {
 	labels := s.Config().Labels
 
 	// wait for networking if necessary
-	if after := labels["io.rancher.os.after"]; after == "network" {
+	if after := labels["io.maxive.os.after"]; after == "network" {
 		if err := network.AllDefaultGWOK(network.DefaultRoutesCheckTimeout); err != nil {
 			log.Warnf("Timeout to wait for the networking ready: %v", err)
 		}

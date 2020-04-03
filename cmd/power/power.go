@@ -10,11 +10,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/rancher/os/cmd/control/install"
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/docker"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/cmd/control/install"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/docker"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
 
 	"github.com/docker/engine-api/types"
 	"github.com/docker/engine-api/types/container"
@@ -148,14 +148,14 @@ func reboot(name string, force bool, code uint) {
 	}
 
 	// Add shutdown timeout
-	timeoutValue := cfg.Rancher.ShutdownTimeout
+	timeoutValue := cfg.Maxive.ShutdownTimeout
 	if timeoutValue == 0 {
 		timeoutValue = 60
 	}
 	if timeoutValue < 5 {
 		timeoutValue = 5
 	}
-	log.Infof("Setting %s timeout to %d (rancher.shutdown_timeout set to %d)", os.Args[0], timeoutValue, cfg.Rancher.ShutdownTimeout)
+	log.Infof("Setting %s timeout to %d (maxive.shutdown_timeout set to %d)", os.Args[0], timeoutValue, cfg.Maxive.ShutdownTimeout)
 
 	go func() {
 		timeout := time.After(time.Duration(timeoutValue) * time.Second)

@@ -6,8 +6,8 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
 
 	"github.com/codegangsta/cli"
 )
@@ -24,7 +24,7 @@ func udevSettleAction(c *cli.Context) {
 
 func extraRules() error {
 	cfg := config.LoadConfig()
-	if len(cfg.Rancher.Network.ModemNetworks) > 0 {
+	if len(cfg.Maxive.Network.ModemNetworks) > 0 {
 		rules, err := ioutil.ReadDir(config.UdevRulesExtrasDir)
 		if err != nil {
 			return err

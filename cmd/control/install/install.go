@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
 )
 
 type MenuEntry struct {
@@ -72,8 +72,8 @@ func MountDevice(baseName, device, partition string, raw bool) (string, string, 
 func GetStatePartition() string {
 	cfg := config.LoadConfig()
 
-	if dev := util.ResolveDevice(cfg.Rancher.State.Dev); dev != "" {
-		// try the rancher.state.dev setting
+	if dev := util.ResolveDevice(cfg.Maxive.State.Dev); dev != "" {
+		// try the maxive.state.dev setting
 		return dev
 	}
 	d, _, err := util.Blkid("RANCHER_STATE")

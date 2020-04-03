@@ -9,19 +9,19 @@ import (
 	"path"
 	"strings"
 
-	rancherConfig "github.com/rancher/os/config"
-	"github.com/rancher/os/config/cloudinit/config"
-	"github.com/rancher/os/config/cloudinit/system"
-	"github.com/rancher/os/pkg/docker"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
+	rancherConfig "github.com/maxive/os/config"
+	"github.com/maxive/os/config/cloudinit/config"
+	"github.com/maxive/os/config/cloudinit/system"
+	"github.com/maxive/os/pkg/docker"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
 
 	"golang.org/x/net/context"
 )
 
 const (
-	resizeStamp = "/var/lib/rancher/resizefs.done"
-	sshKeyName  = "rancheros-cloud-config"
+	resizeStamp = "/var/lib/maxive/resizefs.done"
+	sshKeyName  = "maxiveos-cloud-config"
 )
 
 var (
@@ -59,7 +59,7 @@ func Main() {
 
 func ApplyConsole(cfg *rancherConfig.CloudConfig) {
 	if len(cfg.SSHAuthorizedKeys) > 0 {
-		if err := authorizeSSHKeys("rancher", cfg.SSHAuthorizedKeys, sshKeyName); err != nil {
+		if err := authorizeSSHKeys("maxive", cfg.SSHAuthorizedKeys, sshKeyName); err != nil {
 			log.Error(err)
 		}
 		if err := authorizeSSHKeys("docker", cfg.SSHAuthorizedKeys, sshKeyName); err != nil {
@@ -147,19 +147,19 @@ func WriteFiles(cfg *rancherConfig.CloudConfig, container string) {
 }
 
 func applyPreConsole(cfg *rancherConfig.CloudConfig) {
-	if cfg.Rancher.ResizeDevice != "" {
+	if cfg.Maxive.ResizeDevice != "" {
 		if _, err := os.Stat(resizeStamp); os.IsNotExist(err) {
 			if err := resizeDevice(cfg); err == nil {
 				os.Create(resizeStamp)
 			} else {
-				log.Errorf("Failed to resize %s: %s", cfg.Rancher.ResizeDevice, err)
+				log.Errorf("Failed to resize %s: %s", cfg.Maxive.ResizeDevice, err)
 			}
 		} else {
-			log.Infof("Skipped resizing %s because %s exists", cfg.Rancher.ResizeDevice, resizeStamp)
+			log.Infof("Skipped resizing %s because %s exists", cfg.Maxive.ResizeDevice, resizeStamp)
 		}
 	}
 
-	for k, v := range cfg.Rancher.Sysctl {
+	for k, v := range cfg.Maxive.Sysctl {
 		elems := []string{"/proc", "sys"}
 		elems = append(elems, strings.Split(k, ".")...)
 		path := path.Join(elems...)
@@ -173,7 +173,7 @@ func applyPreConsole(cfg *rancherConfig.CloudConfig) {
 		log.Error(err)
 	}
 
-	for _, restart := range cfg.Rancher.RestartServices {
+	for _, restart := range cfg.Maxive.RestartServices {
 		if err = client.ContainerRestart(context.Background(), restart, 10); err != nil {
 			log.Error(err)
 		}
@@ -182,21 +182,21 @@ func applyPreConsole(cfg *rancherConfig.CloudConfig) {
 
 func resizeDevice(cfg *rancherConfig.CloudConfig) error {
 	partition := "1"
-	targetPartition := fmt.Sprintf("%s%s", cfg.Rancher.ResizeDevice, partition)
+	targetPartition := fmt.Sprintf("%s%s", cfg.Maxive.ResizeDevice, partition)
 
-	if strings.Contains(cfg.Rancher.ResizeDevice, "mmcblk") {
+	if strings.Contains(cfg.Maxive.ResizeDevice, "mmcblk") {
 		partition = "2"
-		targetPartition = fmt.Sprintf("%sp%s", cfg.Rancher.ResizeDevice, partition)
-	} else if strings.Contains(cfg.Rancher.ResizeDevice, "nvme") {
-		targetPartition = fmt.Sprintf("%sp%s", cfg.Rancher.ResizeDevice, partition)
+		targetPartition = fmt.Sprintf("%sp%s", cfg.Maxive.ResizeDevice, partition)
+	} else if strings.Contains(cfg.Maxive.ResizeDevice, "nvme") {
+		targetPartition = fmt.Sprintf("%sp%s", cfg.Maxive.ResizeDevice, partition)
 	}
 
-	cmd := exec.Command("growpart", cfg.Rancher.ResizeDevice, partition)
+	cmd := exec.Command("growpart", cfg.Maxive.ResizeDevice, partition)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Run()
 
-	cmd = exec.Command("partprobe", cfg.Rancher.ResizeDevice)
+	cmd = exec.Command("partprobe", cfg.Maxive.ResizeDevice)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()

@@ -4,9 +4,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/dfs"
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/dfs"
+	"github.com/maxive/os/pkg/log"
 )
 
 var (
@@ -25,13 +25,13 @@ func FS(c *config.CloudConfig) (*config.CloudConfig, error) {
 }
 
 func SaveCmdline(c *config.CloudConfig) (*config.CloudConfig, error) {
-	// the Kernel Patch added for RancherOS passes `--` (only) elided kernel boot params to the init process
+	// the Kernel Patch added for MaxiveOS passes `--` (only) elided kernel boot params to the init process
 	cmdLineArgs := strings.Join(os.Args, " ")
 	config.SaveInitCmdline(cmdLineArgs)
 
 	cfg := config.LoadConfig()
-	log.Debugf("Cmdline debug = %t", cfg.Rancher.Debug)
-	if cfg.Rancher.Debug {
+	log.Debugf("Cmdline debug = %t", cfg.Maxive.Debug)
+	if cfg.Maxive.Debug {
 		log.SetLevel(log.DebugLevel)
 	} else {
 		log.SetLevel(log.InfoLevel)

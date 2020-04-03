@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/rancher/os/config/cmdline"
+	"github.com/maxive/os/config/cmdline"
 
 	"github.com/Sirupsen/logrus"
 	lsyslog "github.com/Sirupsen/logrus/hooks/syslog"
@@ -152,7 +152,7 @@ func InitDeferedLogger() {
 	if logTheseApps() {
 		innerInit(true)
 		//logrus.SetOutput(ioutil.Discard)
-		// write to dmesg until we can write to file. (maybe we can do this if rancher.debug=true?)
+		// write to dmesg until we can write to file. (maybe we can do this if maxive.debug=true?)
 		f, err := os.OpenFile("/dev/kmsg", os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 		if err == nil {
 			logFile = f
@@ -201,7 +201,7 @@ func AddRSyslogHook() {
 				hook, err := lsyslog.NewSyslogHook("udp", netconsoleDestination, syslog.LOG_DEBUG, "")
 				if err == nil {
 					logrus.StandardLogger().Hooks.Add(hook)
-					Infof("Sending RancherOS Logs to: %s", netconsoleDestination)
+					Infof("Sending MaxiveOS Logs to: %s", netconsoleDestination)
 				} else {
 					Errorf("Error creating SyslogHook: %s", err)
 				}

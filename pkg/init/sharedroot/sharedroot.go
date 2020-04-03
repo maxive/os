@@ -3,14 +3,14 @@ package sharedroot
 import (
 	"os"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/init/fsmount"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/init/fsmount"
 
 	"github.com/docker/docker/pkg/mount"
 )
 
 func Setup(c *config.CloudConfig) (*config.CloudConfig, error) {
-	if c.Rancher.NoSharedRoot {
+	if c.Maxive.NoSharedRoot {
 		return c, nil
 	}
 

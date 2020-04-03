@@ -5,11 +5,11 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/config/cmdline"
-	"github.com/rancher/os/pkg/init/bootstrap"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/config/cmdline"
+	"github.com/maxive/os/pkg/init/bootstrap"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
 )
 
 const (
@@ -22,10 +22,10 @@ var (
 )
 
 func MountOem(cfg *config.CloudConfig) (*config.CloudConfig, error) {
-	if err := mountConfigured("oem", cfg.Rancher.State.OemDev, cfg.Rancher.State.OemFsType, config.OemDir); err != nil {
+	if err := mountConfigured("oem", cfg.Maxive.State.OemDev, cfg.Maxive.State.OemFsType, config.OemDir); err != nil {
 		log.Debugf("Not mounting OEM: %v", err)
 	} else {
-		log.Infof("Mounted OEM: %s", cfg.Rancher.State.OemDev)
+		log.Infof("Mounted OEM: %s", cfg.Maxive.State.OemDev)
 	}
 
 	return cfg, nil
@@ -45,10 +45,10 @@ func MountBoot(cfg *config.CloudConfig) (*config.CloudConfig, error) {
 		}
 	}
 
-	if err := mountConfigured("boot", cfg.Rancher.State.BootDev, cfg.Rancher.State.BootFsType, config.BootDir); err != nil {
+	if err := mountConfigured("boot", cfg.Maxive.State.BootDev, cfg.Maxive.State.BootFsType, config.BootDir); err != nil {
 		log.Debugf("Not mounting BOOT: %v", err)
 	} else {
-		log.Infof("Mounted BOOT: %s", cfg.Rancher.State.BootDev)
+		log.Infof("Mounted BOOT: %s", cfg.Maxive.State.BootDev)
 	}
 
 	return cfg, nil
@@ -79,7 +79,7 @@ func mountConfigured(display, dev, fsType, target string) error {
 }
 
 func mountState(cfg *config.CloudConfig) error {
-	return mountConfigured("state", cfg.Rancher.State.Dev, cfg.Rancher.State.FsType, config.StateDir)
+	return mountConfigured("state", cfg.Maxive.State.Dev, cfg.Maxive.State.FsType, config.StateDir)
 }
 
 func tryMountState(cfg *config.CloudConfig) error {
@@ -98,11 +98,11 @@ func tryMountState(cfg *config.CloudConfig) error {
 }
 
 func tryMountStateAndBootstrap(cfg *config.CloudConfig) (*config.CloudConfig, bool, error) {
-	if !IsInitrd() || cfg.Rancher.State.Dev == "" {
+	if !IsInitrd() || cfg.Maxive.State.Dev == "" {
 		return cfg, false, nil
 	}
 
-	if err := tryMountState(cfg); !cfg.Rancher.State.Required && err != nil {
+	if err := tryMountState(cfg); !cfg.Maxive.State.Required && err != nil {
 		return cfg, false, nil
 	} else if err != nil {
 		return cfg, false, err

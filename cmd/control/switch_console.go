@@ -3,9 +3,9 @@ package control
 import (
 	"errors"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/compose"
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/compose"
+	"github.com/maxive/os/pkg/log"
 
 	"github.com/codegangsta/cli"
 	"github.com/docker/libcompose/project/options"
@@ -39,8 +39,8 @@ func switchConsoleAction(c *cli.Context) error {
 		}
 	}
 
-	if err = config.Set("rancher.console", newConsole); err != nil {
-		log.Errorf("Failed to update 'rancher.console': %v", err)
+	if err = config.Set("maxive.console", newConsole); err != nil {
+		log.Errorf("Failed to update 'maxive.console': %v", err)
 	}
 
 	if err = project.Up(context.Background(), options.Up{

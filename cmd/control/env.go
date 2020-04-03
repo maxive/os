@@ -6,8 +6,8 @@ import (
 	"os/exec"
 	"syscall"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/util"
 
 	"github.com/codegangsta/cli"
 )
@@ -21,8 +21,8 @@ func envAction(c *cli.Context) error {
 	}
 	osEnv := os.Environ()
 
-	envMap := make(map[string]string, len(cfg.Rancher.Environment)+len(osEnv))
-	for k, v := range cfg.Rancher.Environment {
+	envMap := make(map[string]string, len(cfg.Maxive.Environment)+len(osEnv))
+	for k, v := range cfg.Maxive.Environment {
 		envMap[k] = v
 	}
 	for k, v := range util.KVPairs2Map(osEnv) {

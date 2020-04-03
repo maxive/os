@@ -1,9 +1,9 @@
 package hypervisor
 
 import (
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
 )
 
 func Tools(cfg *config.CloudConfig) (*config.CloudConfig, error) {
@@ -29,16 +29,16 @@ func enableHypervisorService(cfg *config.CloudConfig, hypervisorName string) {
 	}
 
 	if serviceName != "" {
-		if !cfg.Rancher.HypervisorService {
-			log.Infof("Skipping %s as `rancher.hypervisor_service` is set to false", serviceName)
+		if !cfg.Maxive.HypervisorService {
+			log.Infof("Skipping %s as `maxive.hypervisor_service` is set to false", serviceName)
 			return
 		}
 
 		// Check removed - there's an x509 cert failure on first boot of an installed system
 		// check quickly to see if there is a yml file available
 		//	if service.ValidService(serviceName, cfg) {
-		log.Infof("Setting rancher.services_include. %s=true", serviceName)
-		if err := config.Set("rancher.services_include."+serviceName, "true"); err != nil {
+		log.Infof("Setting maxive.services_include. %s=true", serviceName)
+		if err := config.Set("maxive.services_include."+serviceName, "true"); err != nil {
 			log.Error(err)
 		}
 	}

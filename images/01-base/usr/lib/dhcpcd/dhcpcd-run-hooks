@@ -6,7 +6,7 @@
 # Compiled in features: INET IPv4LL INET6 DHCPv6 AUTH
 #
 # Fixed issues:
-# - remove logger in syslog func: https://github.com/rancher/os/issues/2684
+# - remove logger in syslog func: https://github.com/maxive/os/issues/2684
 
 
 # Handy variables and functions for our hooks to use

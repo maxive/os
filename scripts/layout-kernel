@@ -15,7 +15,7 @@ if [ -e ${DOWNLOADS}/kernel.tar.gz ]; then
         if [ -e ${BUILD}/kernel/boot/${i}-* ]; then
             mkdir -p ${ARTIFACTS}
             # frustratingly, the vmlinuz versioned filename != the tag name, so we need to do some guessing
-            # for eg, 4.9-rc8-rancher2 is called vmlinuz-4.9.0-rc8-rancher
+            # for eg, 4.9-rc8-rancher2 is called vmlinuz-4.9.0-rc8-maxive
             echo "Copy ${BUILD}/kernel/boot/${i}-* to ${ARTIFACTS}/vmlinuz-${KERNEL_VERSION}"
             cp ${BUILD}/kernel/boot/${i}-* ${ARTIFACTS}/vmlinuz-${KERNEL_VERSION}
             # use an unversioned filename for `scripts/run`

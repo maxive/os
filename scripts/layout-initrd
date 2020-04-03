@@ -34,15 +34,15 @@ curl -SL ${!SYSTEM_DOCKER_URL} | tar --strip-components=1 -xzvf - -C ${INITRD_DI
 rm -f ${INITRD_DIR}/usr/bin/system-docker-proxy
 
 cat <<HERE > ${INITRD_DIR}/usr/share/ros/os-release
-NAME="RancherOS"
+NAME="MaxiveOS"
 VERSION=${VERSION}
-ID=rancheros
+ID=maxiveos
 ID_LIKE=
 VERSION_ID=${VERSION}
-PRETTY_NAME="RancherOS ${VERSION}"
+PRETTY_NAME="MaxiveOS ${VERSION}"
 HOME_URL="http://rancher.com/rancher-os/"
 SUPPORT_URL="https://forums.rancher.com/c/rancher-os"
-BUG_REPORT_URL="https://github.com/rancher/os/issues"
+BUG_REPORT_URL="https://github.com/maxive/os/issues"
 BUILD_ID=
 HERE
 
@@ -103,7 +103,7 @@ if [ -e ${DOWNLOADS}/policy.29 ]; then
     cp ${DOWNLOADS}/policy.29 ${INITRD_DIR}/usr/etc/selinux/ros/policy/
 fi
 
-# make rancher/os-initrd image
+# make maxive/os-initrd image
 cat <<HERE > ${INITRD_DIR}/../Dockerfile.initrd
 FROM scratch
 COPY initrd/* /
@@ -114,5 +114,5 @@ tag="${OS_REPO}/${name}:${VERSION}${SUFFIX}"
 pushd .
 cd ${INITRD_DIR}/..
 docker build -t ${OS_REPO}/${name} -f Dockerfile.initrd .
-docker tag rancher/${name} ${tag}
+docker tag maxive/${name} ${tag}
 popd

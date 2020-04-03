@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
 
 	"github.com/pkg/errors"
 )
@@ -26,7 +26,7 @@ func yes(question string) bool {
 }
 
 func formatImage(image string, cfg *config.CloudConfig) string {
-	domainRegistry := cfg.Rancher.Environment["REGISTRY_DOMAIN"]
+	domainRegistry := cfg.Maxive.Environment["REGISTRY_DOMAIN"]
 	if domainRegistry != "docker.io" && domainRegistry != "" {
 		return fmt.Sprintf("%s/%s", domainRegistry, image)
 	}
@@ -38,22 +38,22 @@ func symLinkEngineBinary() []symlink {
 		{"/usr/share/ros/os-release", "/usr/lib/os-release"},
 		{"/usr/share/ros/os-release", "/etc/os-release"},
 
-		{"/var/lib/rancher/engine/docker", "/usr/bin/docker"},
-		{"/var/lib/rancher/engine/dockerd", "/usr/bin/dockerd"},
-		{"/var/lib/rancher/engine/docker-init", "/usr/bin/docker-init"},
-		{"/var/lib/rancher/engine/docker-proxy", "/usr/bin/docker-proxy"},
+		{"/var/lib/maxive/engine/docker", "/usr/bin/docker"},
+		{"/var/lib/maxive/engine/dockerd", "/usr/bin/dockerd"},
+		{"/var/lib/maxive/engine/docker-init", "/usr/bin/docker-init"},
+		{"/var/lib/maxive/engine/docker-proxy", "/usr/bin/docker-proxy"},
 
 		// >= 18.09.0
-		{"/var/lib/rancher/engine/containerd", "/usr/bin/containerd"},
-		{"/var/lib/rancher/engine/ctr", "/usr/bin/ctr"},
-		{"/var/lib/rancher/engine/containerd-shim", "/usr/bin/containerd-shim"},
-		{"/var/lib/rancher/engine/runc", "/usr/bin/runc"},
+		{"/var/lib/maxive/engine/containerd", "/usr/bin/containerd"},
+		{"/var/lib/maxive/engine/ctr", "/usr/bin/ctr"},
+		{"/var/lib/maxive/engine/containerd-shim", "/usr/bin/containerd-shim"},
+		{"/var/lib/maxive/engine/runc", "/usr/bin/runc"},
 
 		// < 18.09.0
-		{"/var/lib/rancher/engine/docker-containerd", "/usr/bin/docker-containerd"},
-		{"/var/lib/rancher/engine/docker-containerd-ctr", "/usr/bin/docker-containerd-ctr"},
-		{"/var/lib/rancher/engine/docker-containerd-shim", "/usr/bin/docker-containerd-shim"},
-		{"/var/lib/rancher/engine/docker-runc", "/usr/bin/docker-runc"},
+		{"/var/lib/maxive/engine/docker-containerd", "/usr/bin/docker-containerd"},
+		{"/var/lib/maxive/engine/docker-containerd-ctr", "/usr/bin/docker-containerd-ctr"},
+		{"/var/lib/maxive/engine/docker-containerd-shim", "/usr/bin/docker-containerd-shim"},
+		{"/var/lib/maxive/engine/docker-runc", "/usr/bin/docker-runc"},
 	}
 	return baseSymlink
 }

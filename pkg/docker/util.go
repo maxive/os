@@ -1,7 +1,7 @@
 package docker
 
 import (
-	"github.com/rancher/os/config"
+	"github.com/maxive/os/config"
 
 	composeConfig "github.com/docker/libcompose/config"
 )

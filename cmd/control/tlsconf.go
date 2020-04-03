@@ -5,19 +5,19 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
 
 	"github.com/codegangsta/cli"
 	machineUtil "github.com/docker/machine/utils"
 )
 
 const (
-	NAME          string = "rancher"
+	NAME          string = "maxive"
 	BITS          int    = 2048
 	ServerTLSPath string = "/etc/docker/tls"
-	ClientTLSPath string = "/home/rancher/.docker"
+	ClientTLSPath string = "/home/maxive/.docker"
 	Cert          string = "cert.pem"
 	Key           string = "key.pem"
 	ServerCert    string = "server-cert.pem"
@@ -73,14 +73,14 @@ func writeCerts(generateServer bool, hostname []string, certPath, keyPath, caCer
 	}
 
 	// certPath, keyPath are already written to by machineUtil.GenerateCert()
-	if err := config.Set("rancher.docker.server_cert", string(cert)); err != nil {
+	if err := config.Set("maxive.docker.server_cert", string(cert)); err != nil {
 		return err
 	}
-	return config.Set("rancher.docker.server_key", string(key))
+	return config.Set("maxive.docker.server_key", string(key))
 }
 
 func writeCaCerts(cfg *config.CloudConfig, caCertPath, caKeyPath string) error {
-	if cfg.Rancher.Docker.CACert == "" {
+	if cfg.Maxive.Docker.CACert == "" {
 		if err := machineUtil.GenerateCACertificate(caCertPath, caKeyPath, NAME, BITS); err != nil {
 			return err
 		}
@@ -96,20 +96,20 @@ func writeCaCerts(cfg *config.CloudConfig, caCertPath, caKeyPath string) error {
 		}
 
 		// caCertPath, caKeyPath are already written to by machineUtil.GenerateCACertificate()
-		if err := config.Set("rancher.docker.ca_cert", string(caCert)); err != nil {
+		if err := config.Set("maxive.docker.ca_cert", string(caCert)); err != nil {
 			return err
 		}
-		if err := config.Set("rancher.docker.ca_key", string(caKey)); err != nil {
+		if err := config.Set("maxive.docker.ca_key", string(caKey)); err != nil {
 			return err
 		}
 	} else {
 		cfg = config.LoadConfig()
 
-		if err := util.WriteFileAtomic(caCertPath, []byte(cfg.Rancher.Docker.CACert), 0400); err != nil {
+		if err := util.WriteFileAtomic(caCertPath, []byte(cfg.Maxive.Docker.CACert), 0400); err != nil {
 			return err
 		}
 
-		if err := util.WriteFileAtomic(caKeyPath, []byte(cfg.Rancher.Docker.CAKey), 0400); err != nil {
+		if err := util.WriteFileAtomic(caKeyPath, []byte(cfg.Maxive.Docker.CAKey), 0400); err != nil {
 			return err
 		}
 	}
@@ -169,7 +169,7 @@ func Generate(generateServer bool, outDir string, hostnames []string) error {
 
 	if !generateServer {
 		if err := filepath.Walk(outDir, func(path string, info os.FileInfo, err error) error {
-			return os.Chown(path, 1100, 1100) // rancher:rancher
+			return os.Chown(path, 1100, 1100) // maxive:maxive
 		}); err != nil {
 			return err
 		}

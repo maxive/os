@@ -6,9 +6,9 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
 )
 
 func LoadModules(cfg *config.CloudConfig) (*config.CloudConfig, error) {
@@ -26,10 +26,10 @@ func LoadModules(cfg *config.CloudConfig) (*config.CloudConfig, error) {
 	}
 
 	if util.GetHypervisor() == "hyperv" {
-		cfg.Rancher.Modules = append(cfg.Rancher.Modules, "hv_utils", "hv_storvsc", "hv_vmbus")
+		cfg.Maxive.Modules = append(cfg.Maxive.Modules, "hv_utils", "hv_storvsc", "hv_vmbus")
 	}
 
-	for _, module := range cfg.Rancher.Modules {
+	for _, module := range cfg.Maxive.Modules {
 		if mounted[module] {
 			continue
 		}

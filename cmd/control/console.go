@@ -5,13 +5,13 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/rancher/os/cmd/control/service"
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/compose"
-	"github.com/rancher/os/pkg/docker"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
-	"github.com/rancher/os/pkg/util/network"
+	"github.com/maxive/os/cmd/control/service"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/compose"
+	"github.com/maxive/os/pkg/docker"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
+	"github.com/maxive/os/pkg/util/network"
 
 	"github.com/codegangsta/cli"
 	"github.com/docker/docker/reference"
@@ -124,8 +124,8 @@ func consoleEnable(c *cli.Context) error {
 		}
 	}
 
-	if err := config.Set("rancher.console", newConsole); err != nil {
-		log.Errorf("Failed to update 'rancher.console': %v", err)
+	if err := config.Set("maxive.console", newConsole); err != nil {
+		log.Errorf("Failed to update 'maxive.console': %v", err)
 	}
 
 	return nil
@@ -139,7 +139,7 @@ func consoleList(c *cli.Context) error {
 	for _, console := range consoles {
 		if console == CurrentConsole {
 			fmt.Printf("current  %s\n", console)
-		} else if console == cfg.Rancher.Console {
+		} else if console == cfg.Maxive.Console {
 			fmt.Printf("enabled  %s\n", console)
 		} else {
 			fmt.Printf("disabled %s\n", console)
@@ -158,13 +158,13 @@ func validateConsole(console string, cfg *config.CloudConfig) {
 
 func availableConsoles(cfg *config.CloudConfig, update bool) []string {
 	if update {
-		err := network.UpdateCaches(cfg.Rancher.Repositories.ToArray(), "consoles")
+		err := network.UpdateCaches(cfg.Maxive.Repositories.ToArray(), "consoles")
 		if err != nil {
 			log.Debugf("Failed to update console caches: %v", err)
 		}
 
 	}
-	consoles, err := network.GetConsoles(cfg.Rancher.Repositories.ToArray())
+	consoles, err := network.GetConsoles(cfg.Maxive.Repositories.ToArray())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -199,6 +199,6 @@ func CurrentConsole() (console string) {
 		console = "default"
 		return
 	}
-	console = strings.TrimPrefix(strings.TrimSuffix(image.Name(), "console"), "rancher/os-")
+	console = strings.TrimPrefix(strings.TrimSuffix(image.Name(), "console"), "maxive/os-")
 	return
 }

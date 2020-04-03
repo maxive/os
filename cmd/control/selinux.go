@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"syscall"
 
-	"github.com/rancher/os/config"
+	"github.com/maxive/os/config"
 
 	"github.com/codegangsta/cli"
 )
@@ -36,13 +36,13 @@ func selinuxCommand() cli.Command {
 			"-v", "/etc/hosts:/etc/hosts",
 			"-v", "/etc/resolv.conf:/etc/resolv.conf",
 			"-v", "/etc/rkt:/etc/rkt",
-			"-v", "/etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt.rancher",
+			"-v", "/etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt.maxive",
 			"-v", "/lib/firmware:/lib/firmware",
 			"-v", "/lib/modules:/lib/modules",
 			"-v", "/run:/run",
 			"-v", "/usr/share/ros:/usr/share/ros",
-			"-v", "/var/lib/rancher/conf:/var/lib/rancher/conf",
-			"-v", "/var/lib/rancher:/var/lib/rancher",
+			"-v", "/var/lib/maxive/conf:/var/lib/maxive/conf",
+			"-v", "/var/lib/maxive:/var/lib/maxive",
 			"-v", "/var/log:/var/log",
 			"-v", "/var/run:/var/run",
 			"-v", "/home:/home",

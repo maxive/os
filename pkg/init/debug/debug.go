@@ -1,8 +1,8 @@
 package debug
 
 import (
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
 )
 
 func PrintAndLoadConfig(_ *config.CloudConfig) (*config.CloudConfig, error) {

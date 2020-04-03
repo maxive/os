@@ -11,9 +11,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/docker"
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/docker"
+	"github.com/maxive/os/pkg/log"
 
 	"github.com/codegangsta/cli"
 	dockerClient "github.com/docker/engine-api/client"
@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	userImagesPreloadDirectory = "/var/lib/rancher/preload/docker"
+	userImagesPreloadDirectory = "/var/lib/maxive/preload/docker"
 )
 
 func preloadImagesAction(c *cli.Context) error {
@@ -111,7 +111,7 @@ func PreloadImages(clientFactory func() (dockerClient.APIClient, error), imagesD
 			return err
 		}
 		cfg := config.LoadConfig()
-		if cfg.Rancher.PreloadWait {
+		if cfg.Maxive.PreloadWait {
 			if _, err := ioutil.ReadAll(imageLoadResponse.Body); err != nil {
 				return err
 			}

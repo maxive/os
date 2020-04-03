@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/pkg/log"
 )
 
 func RunGrub(baseName, device string) error {
@@ -26,8 +26,8 @@ func grubConfig(menu BootVars) error {
 
 	filetmpl, err := template.New("grub2config").Parse(`{{define "grub2menu"}}menuentry "{{.Name}}" {
   set root=(hd0,msdos1)
-  linux /{{.bootDir}}vmlinuz-{{.Version}}-rancheros {{.KernelArgs}} {{.Append}}
-  initrd /{{.bootDir}}initrd-{{.Version}}-rancheros
+  linux /{{.bootDir}}vmlinuz-{{.Version}}-maxiveos {{.KernelArgs}} {{.Append}}
+  initrd /{{.bootDir}}initrd-{{.Version}}-maxiveos
 }
 
 {{end}}
@@ -63,10 +63,10 @@ func PvGrubConfig(menu BootVars) error {
 	log.Debugf("pvGrubConfig")
 
 	filetmpl, err := template.New("grublst").Parse(`{{define "grubmenu"}}
-title RancherOS {{.Version}}-({{.Name}})
+title MaxiveOS {{.Version}}-({{.Name}})
 root (hd0)
-kernel /${bootDir}vmlinuz-{{.Version}}-rancheros {{.KernelArgs}} {{.Append}}
-initrd /${bootDir}initrd-{{.Version}}-rancheros
+kernel /${bootDir}vmlinuz-{{.Version}}-maxiveos {{.KernelArgs}} {{.Append}}
+initrd /${bootDir}initrd-{{.Version}}-maxiveos
 
 {{end}}
 default 0

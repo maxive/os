@@ -1,5 +1,5 @@
 // Copyright 2015 CoreOS, Inc.
-// Copyright 2015-2017 Rancher Labs, Inc.
+// Copyright 2015-2017 Maxive Labs, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import (
 	"net"
 	"testing"
 
-	"github.com/rancher/os/config/cloudinit/datasource"
+	"github.com/maxive/os/config/cloudinit/datasource"
 )
 
 func TestSubstituteUserDataVars(t *testing.T) {
@@ -37,14 +37,14 @@ func TestSubstituteUserDataVars(t *testing.T) {
 				PrivateIPv6: net.ParseIP("fe00:5678::"),
 			},
 			`servicexyz:
-			  image: rancher/servicexyz:v0.3.1
+			  image: maxive/servicexyz:v0.3.1
 			  ports:
 			  - "$public_ipv4:8001:8001"
 			  - "$public_ipv6:8001:8001"
 			  - "$private_ipv4:8001:8001"
 			  - "$private_ipv6:8001:8001"`,
 			`servicexyz:
-			  image: rancher/servicexyz:v0.3.1
+			  image: maxive/servicexyz:v0.3.1
 			  ports:
 			  - "192.0.2.3:8001:8001"
 			  - "fe00:1234:::8001:8001"
@@ -52,7 +52,7 @@ func TestSubstituteUserDataVars(t *testing.T) {
 			  - "fe00:5678:::8001:8001"`,
 		},
 		{
-			// Userdata with cloud-config/rancher syntax
+			// Userdata with cloud-config/maxive syntax
 			datasource.Metadata{
 				PublicIPv4:  net.ParseIP("192.0.2.3"),
 				PrivateIPv4: net.ParseIP("192.0.2.203"),
@@ -64,7 +64,7 @@ func TestSubstituteUserDataVars(t *testing.T) {
 			      content: |
 			        PRIVATE_IPV6=$private_ipv6
 			        PUBLIC_IPV6=$public_ipv6
-			rancher:
+			maxive:
 			  network:
 			    interfaces:
 			      eth1:
@@ -76,7 +76,7 @@ func TestSubstituteUserDataVars(t *testing.T) {
 			      content: |
 			        PRIVATE_IPV6=fe00:5678::
 			        PUBLIC_IPV6=fe00:1234::
-			rancher:
+			maxive:
 			  network:
 			    interfaces:
 			      eth1:

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/pkg/util"
 
 	yaml "github.com/cloudfoundry-incubator/candiedyaml"
 )
@@ -27,7 +27,7 @@ func Read(parseAll bool) (m map[interface{}]interface{}, err error) {
 
 func GetCmdline(key string) interface{} {
 	parseAll := true
-	if strings.HasPrefix(key, "cc.") || strings.HasPrefix(key, "rancher.") {
+	if strings.HasPrefix(key, "cc.") || strings.HasPrefix(key, "maxive.") {
 		// the normal case
 		parseAll = false
 	}
@@ -156,7 +156,7 @@ outer:
 	for _, part := range splitCmdLine(cmdLine) {
 		if strings.HasPrefix(part, "cc.") {
 			part = part[3:]
-		} else if !strings.HasPrefix(part, "rancher.") {
+		} else if !strings.HasPrefix(part, "maxive.") {
 			if !parseAll {
 				continue
 			}

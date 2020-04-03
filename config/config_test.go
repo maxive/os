@@ -3,8 +3,8 @@ package config
 import (
 	"testing"
 
-	"github.com/rancher/os/config/cmdline"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/config/cmdline"
+	"github.com/maxive/os/pkg/util"
 
 	yaml "github.com/cloudfoundry-incubator/candiedyaml"
 	"github.com/stretchr/testify/require"
@@ -15,7 +15,7 @@ func TestFilterKey(t *testing.T) {
 	data := map[interface{}]interface{}{
 		"ssh_authorized_keys": []string{"pubk1", "pubk2"},
 		"hostname":            "ros-test",
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"ssh": map[interface{}]interface{}{
 				"keys": map[interface{}]interface{}{
 					"dsa":     "dsa-test1",
@@ -30,7 +30,7 @@ func TestFilterKey(t *testing.T) {
 		},
 	}
 	expectedFiltered := map[interface{}]interface{}{
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"ssh": map[interface{}]interface{}{
 				"keys": map[interface{}]interface{}{
 					"dsa":     "dsa-test1",
@@ -42,7 +42,7 @@ func TestFilterKey(t *testing.T) {
 	expectedRest := map[interface{}]interface{}{
 		"ssh_authorized_keys": []string{"pubk1", "pubk2"},
 		"hostname":            "ros-test",
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"docker": map[interface{}]interface{}{
 				"ca_key":  "ca_key-test3",
 				"ca_cert": "ca_cert-test4",
@@ -50,7 +50,7 @@ func TestFilterKey(t *testing.T) {
 			},
 		},
 	}
-	filtered, rest := filterKey(data, []string{"rancher", "ssh"})
+	filtered, rest := filterKey(data, []string{"maxive", "ssh"})
 	assert.Equal(expectedFiltered, filtered)
 	assert.Equal(expectedRest, rest)
 }
@@ -105,83 +105,83 @@ func TestCmdlineParse(t *testing.T) {
 	assert := require.New(t)
 
 	assert.Equal(map[interface{}]interface{}{
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"key1": "value1",
 			"key2": "value2",
 		},
-	}, cmdline.Parse("a b rancher.key1=value1 c rancher.key2=value2", false), false)
+	}, cmdline.Parse("a b maxive.key1=value1 c maxive.key2=value2", false), false)
 
 	assert.Equal(map[interface{}]interface{}{
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"key": "a,b",
 		},
-	}, cmdline.Parse("rancher.key=a,b", false), false)
+	}, cmdline.Parse("maxive.key=a,b", false), false)
 
 	assert.Equal(map[interface{}]interface{}{
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"key": "a\nb",
 		},
-	}, cmdline.Parse("rancher.key=a\nb", false), false)
+	}, cmdline.Parse("maxive.key=a\nb", false), false)
 
 	assert.Equal(map[interface{}]interface{}{
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"key": "a b",
 		},
-	}, cmdline.Parse("rancher.key='a b'", false), false)
+	}, cmdline.Parse("maxive.key='a b'", false), false)
 
 	assert.Equal(map[interface{}]interface{}{
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"key": "a:b",
 		},
-	}, cmdline.Parse("rancher.key=a:b", false), false)
+	}, cmdline.Parse("maxive.key=a:b", false), false)
 
 	assert.Equal(map[interface{}]interface{}{
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"key": int64(5),
 		},
-	}, cmdline.Parse("rancher.key=5", false), false)
+	}, cmdline.Parse("maxive.key=5", false), false)
 
 	assert.Equal(map[interface{}]interface{}{
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"rescue": true,
 		},
-	}, cmdline.Parse("rancher.rescue", false), false)
+	}, cmdline.Parse("maxive.rescue", false), false)
 
 	assert.Equal(map[interface{}]interface{}{
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"keyArray": []interface{}{int64(1), int64(2)},
 		},
-	}, cmdline.Parse("rancher.keyArray=[1,2]", false), false)
+	}, cmdline.Parse("maxive.keyArray=[1,2]", false), false)
 
 	assert.Equal(map[interface{}]interface{}{
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"strArray": []interface{}{"url:http://192.168.1.100/cloud-config?a=b"},
 		},
-	}, cmdline.Parse("rancher.strArray=[\"url:http://192.168.1.100/cloud-config?a=b\"]", false), false)
+	}, cmdline.Parse("maxive.strArray=[\"url:http://192.168.1.100/cloud-config?a=b\"]", false), false)
 
 	assert.Equal(map[interface{}]interface{}{
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"strArray": []interface{}{"url:http://192.168.1.100/cloud-config?a=b"},
 		},
-	}, cmdline.Parse("rancher.strArray=[url:http://192.168.1.100/cloud-config?a=b]", false), false)
+	}, cmdline.Parse("maxive.strArray=[url:http://192.168.1.100/cloud-config?a=b]", false), false)
 
 	assert.Equal(map[interface{}]interface{}{
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"strArray": []interface{}{"part1 part2", "part3"},
 		},
-	}, cmdline.Parse("rancher.strArray=['part1 part2',part3]", false), false)
+	}, cmdline.Parse("maxive.strArray=['part1 part2',part3]", false), false)
 
 	assert.Equal(map[interface{}]interface{}{
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"strArray": []interface{}{"part1 part2", "part3"},
 		},
-	}, cmdline.Parse("rancher.strArray=[\"part1 part2\",part3]", false), false)
+	}, cmdline.Parse("maxive.strArray=[\"part1 part2\",part3]", false), false)
 
 	assert.Equal(map[interface{}]interface{}{
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"strArray": []interface{}{"part1 part2", "part3"},
 		},
-	}, cmdline.Parse("rancher.strArray=[ \"part1 part2\", part3 ]", false), false)
+	}, cmdline.Parse("maxive.strArray=[ \"part1 part2\", part3 ]", false), false)
 }
 
 func TestGet(t *testing.T) {
@@ -189,7 +189,7 @@ func TestGet(t *testing.T) {
 
 	data := map[interface{}]interface{}{
 		"key": "value",
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"key2": map[interface{}]interface{}{
 				"subkey": "subvalue",
 				"subnum": 42,
@@ -199,9 +199,9 @@ func TestGet(t *testing.T) {
 
 	tests := map[string]interface{}{
 		"key": "value",
-		"rancher.key2.subkey":  "subvalue",
-		"rancher.key2.subnum":  42,
-		"rancher.key2.subkey2": "",
+		"maxive.key2.subkey":  "subvalue",
+		"maxive.key2.subnum":  42,
+		"maxive.key2.subkey2": "",
 		"foo": "",
 	}
 
@@ -216,7 +216,7 @@ func TestSet(t *testing.T) {
 
 	data := map[interface{}]interface{}{
 		"key": "value",
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"key2": map[interface{}]interface{}{
 				"subkey": "subvalue",
 				"subnum": 42,
@@ -226,7 +226,7 @@ func TestSet(t *testing.T) {
 
 	expected := map[interface{}]interface{}{
 		"key": "value2",
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"key2": map[interface{}]interface{}{
 				"subkey":  "subvalue2",
 				"subkey2": "value",
@@ -242,10 +242,10 @@ func TestSet(t *testing.T) {
 
 	tests := map[string]interface{}{
 		"key": "value2",
-		"rancher.key2.subkey":  "subvalue2",
-		"rancher.key2.subkey2": "value",
-		"rancher.key2.subkey3": 43,
-		"rancher.key3.subkey3": 44,
+		"maxive.key2.subkey":  "subvalue2",
+		"maxive.key2.subkey2": "value",
+		"maxive.key2.subkey3": 43,
+		"maxive.key3.subkey3": 44,
 		"key4":                 "value4",
 	}
 
@@ -297,7 +297,7 @@ func TestUserDocker(t *testing.T) {
 	assert := require.New(t)
 
 	config := &CloudConfig{
-		Rancher: RancherConfig{
+		Maxive: RancherConfig{
 			Docker: DockerConfig{
 				TLS: true,
 			},
@@ -308,16 +308,16 @@ func TestUserDocker(t *testing.T) {
 	assert.Nil(err)
 
 	config = &CloudConfig{}
-	assert.False(config.Rancher.Docker.TLS)
+	assert.False(config.Maxive.Docker.TLS)
 	err = yaml.Unmarshal(bytes, config)
 	assert.Nil(err)
-	assert.True(config.Rancher.Docker.TLS)
+	assert.True(config.Maxive.Docker.TLS)
 
 	data := map[interface{}]interface{}{}
 	err = util.Convert(config, &data)
 	assert.Nil(err)
 
-	val, ok := data["rancher"].(map[interface{}]interface{})["docker"]
+	val, ok := data["maxive"].(map[interface{}]interface{})["docker"]
 	assert.True(ok)
 
 	m, ok := val.(map[interface{}]interface{})

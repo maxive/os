@@ -5,25 +5,25 @@ package init
 import (
 	"fmt"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/dfs"
-	"github.com/rancher/os/pkg/init/b2d"
-	"github.com/rancher/os/pkg/init/cloudinit"
-	"github.com/rancher/os/pkg/init/configfiles"
-	"github.com/rancher/os/pkg/init/debug"
-	"github.com/rancher/os/pkg/init/docker"
-	"github.com/rancher/os/pkg/init/env"
-	"github.com/rancher/os/pkg/init/fsmount"
-	"github.com/rancher/os/pkg/init/hypervisor"
-	"github.com/rancher/os/pkg/init/modules"
-	"github.com/rancher/os/pkg/init/one"
-	"github.com/rancher/os/pkg/init/prepare"
-	"github.com/rancher/os/pkg/init/recovery"
-	"github.com/rancher/os/pkg/init/selinux"
-	"github.com/rancher/os/pkg/init/sharedroot"
-	"github.com/rancher/os/pkg/init/switchroot"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/sysinit"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/dfs"
+	"github.com/maxive/os/pkg/init/b2d"
+	"github.com/maxive/os/pkg/init/cloudinit"
+	"github.com/maxive/os/pkg/init/configfiles"
+	"github.com/maxive/os/pkg/init/debug"
+	"github.com/maxive/os/pkg/init/docker"
+	"github.com/maxive/os/pkg/init/env"
+	"github.com/maxive/os/pkg/init/fsmount"
+	"github.com/maxive/os/pkg/init/hypervisor"
+	"github.com/maxive/os/pkg/init/modules"
+	"github.com/maxive/os/pkg/init/one"
+	"github.com/maxive/os/pkg/init/prepare"
+	"github.com/maxive/os/pkg/init/recovery"
+	"github.com/maxive/os/pkg/init/selinux"
+	"github.com/maxive/os/pkg/init/sharedroot"
+	"github.com/maxive/os/pkg/init/switchroot"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/sysinit"
 )
 
 func MainInit() {
@@ -73,8 +73,8 @@ func RunInit() error {
 		recovery.Recovery(err)
 	}
 
-	launchConfig, args := docker.GetLaunchConfig(cfg, &cfg.Rancher.SystemDocker)
-	launchConfig.Fork = !cfg.Rancher.SystemDocker.Exec
+	launchConfig, args := docker.GetLaunchConfig(cfg, &cfg.Maxive.SystemDocker)
+	launchConfig.Fork = !cfg.Maxive.SystemDocker.Exec
 	//launchConfig.NoLog = true
 
 	log.Info("Launching System Docker")
@@ -84,7 +84,7 @@ func RunInit() error {
 		recovery.Recovery(err)
 		return err
 	}
-	// Code never gets here - rancher.system_docker.exec=true
+	// Code never gets here - maxive.system_docker.exec=true
 
 	return one.PidOne()
 }

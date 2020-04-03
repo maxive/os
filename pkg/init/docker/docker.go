@@ -3,12 +3,12 @@ package docker
 import (
 	"syscall"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/dfs"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/dfs"
 )
 
 func Start(cfg *config.CloudConfig) (chan interface{}, error) {
-	launchConfig, args := GetLaunchConfig(cfg, &cfg.Rancher.BootstrapDocker)
+	launchConfig, args := GetLaunchConfig(cfg, &cfg.Maxive.BootstrapDocker)
 	launchConfig.Fork = true
 	launchConfig.LogFile = ""
 	launchConfig.NoLog = true
@@ -41,12 +41,12 @@ func GetLaunchConfig(cfg *config.CloudConfig, dockerCfg *config.DockerConfig) (*
 
 	args := dfs.ParseConfig(&launchConfig, dockerCfg.FullArgs()...)
 
-	launchConfig.DNSConfig.Nameservers = cfg.Rancher.Defaults.Network.DNS.Nameservers
-	launchConfig.DNSConfig.Search = cfg.Rancher.Defaults.Network.DNS.Search
+	launchConfig.DNSConfig.Nameservers = cfg.Maxive.Defaults.Network.DNS.Nameservers
+	launchConfig.DNSConfig.Search = cfg.Maxive.Defaults.Network.DNS.Search
 	launchConfig.Environment = dockerCfg.Environment
 
-	if !cfg.Rancher.Debug {
-		launchConfig.LogFile = cfg.Rancher.Defaults.SystemDockerLogs
+	if !cfg.Maxive.Debug {
+		launchConfig.LogFile = cfg.Maxive.Defaults.SystemDockerLogs
 	}
 
 	return &launchConfig, args

@@ -527,7 +527,7 @@ func (s *Service) connectContainerToNetworks(ctx context.Context, c *Container, 
 	}
 	connectedNetworks := existingContainer.NetworkSettings.Networks
 
-	if _, ok := s.serviceConfig.Labels["io.rancher.user_docker.net"]; ok {
+	if _, ok := s.serviceConfig.Labels["io.maxive.user_docker.net"]; ok {
 		for networkName, connectedNetwork := range connectedNetworks {
 			aliasPresent := false
 			for _, alias := range connectedNetwork.Aliases {
@@ -545,8 +545,8 @@ func (s *Service) connectContainerToNetworks(ctx context.Context, c *Container, 
 			}
 		}
 
-		if _, fipExist := s.serviceConfig.Labels["io.rancher.user_docker.fix_ip"]; fipExist {
-			if err := s.NetworkConnect(ctx, c, s.serviceConfig.Labels["io.rancher.user_docker.net"], s.serviceConfig.Labels["io.rancher.user_docker.fix_ip"], oneOff); err != nil {
+		if _, fipExist := s.serviceConfig.Labels["io.maxive.user_docker.fix_ip"]; fipExist {
+			if err := s.NetworkConnect(ctx, c, s.serviceConfig.Labels["io.maxive.user_docker.net"], s.serviceConfig.Labels["io.maxive.user_docker.fix_ip"], oneOff); err != nil {
 				return err
 			}
 		}

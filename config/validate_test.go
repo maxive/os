@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/pkg/util"
 
 	yaml "github.com/cloudfoundry-incubator/candiedyaml"
 )
@@ -27,7 +27,7 @@ func testValidate(t *testing.T, cfg []byte, contains string) {
 
 func TestValidate(t *testing.T) {
 	testValidate(t, []byte("{}"), "")
-	testValidate(t, []byte(`rancher:
+	testValidate(t, []byte(`maxive:
   log: true`), "")
 	testValidate(t, []byte(`write_files:
 - container: console
@@ -37,12 +37,12 @@ func TestValidate(t *testing.T) {
   content: |
     #!/bin/bash
     wait-for-docker`), "")
-	testValidate(t, []byte(`rancher:
+	testValidate(t, []byte(`maxive:
   docker:
     extra_args: ['--insecure-registry', 'my.registry.com']`), "")
 
 	testValidate(t, []byte("bad_key: {}"), "Additional property bad_key is not allowed")
-	testValidate(t, []byte("rancher: []"), "rancher: Invalid type. Expected: object, given: array")
+	testValidate(t, []byte("maxive: []"), "maxive: Invalid type. Expected: object, given: array")
 
 	var fullConfig map[string]interface{}
 	if err := util.ConvertIgnoreOmitEmpty(CloudConfig{}, &fullConfig); err != nil {

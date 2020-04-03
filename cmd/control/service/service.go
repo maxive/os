@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/os/cmd/control/service/command"
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/compose"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
-	"github.com/rancher/os/pkg/util/network"
+	"github.com/maxive/os/cmd/control/service/command"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/compose"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
+	"github.com/maxive/os/pkg/util/network"
 
 	"github.com/codegangsta/cli"
 	dockerApp "github.com/docker/libcompose/cli/docker/app"
@@ -94,7 +94,7 @@ func serviceSubCommands() []cli.Command {
 }
 
 func updateIncludedServices(cfg *config.CloudConfig) error {
-	return config.Set("rancher.services_include", cfg.Rancher.ServicesInclude)
+	return config.Set("maxive.services_include", cfg.Maxive.ServicesInclude)
 }
 
 func disable(c *cli.Context) error {
@@ -104,11 +104,11 @@ func disable(c *cli.Context) error {
 	for _, service := range c.Args() {
 		validateService(service, cfg)
 
-		if _, ok := cfg.Rancher.ServicesInclude[service]; !ok {
+		if _, ok := cfg.Maxive.ServicesInclude[service]; !ok {
 			continue
 		}
 
-		cfg.Rancher.ServicesInclude[service] = false
+		cfg.Maxive.ServicesInclude[service] = false
 		changed = true
 	}
 
@@ -128,11 +128,11 @@ func del(c *cli.Context) error {
 	for _, service := range c.Args() {
 		validateService(service, cfg)
 
-		if _, ok := cfg.Rancher.ServicesInclude[service]; !ok {
+		if _, ok := cfg.Maxive.ServicesInclude[service]; !ok {
 			continue
 		}
 
-		delete(cfg.Rancher.ServicesInclude, service)
+		delete(cfg.Maxive.ServicesInclude, service)
 		changed = true
 	}
 
@@ -153,12 +153,12 @@ func enable(c *cli.Context) error {
 	for _, service := range c.Args() {
 		validateService(service, cfg)
 
-		if val, ok := cfg.Rancher.ServicesInclude[service]; !ok || !val {
-			if isLocal(service) && !strings.HasPrefix(service, "/var/lib/rancher/conf") {
-				log.Fatalf("ERROR: Service should be in path /var/lib/rancher/conf")
+		if val, ok := cfg.Maxive.ServicesInclude[service]; !ok || !val {
+			if isLocal(service) && !strings.HasPrefix(service, "/var/lib/maxive/conf") {
+				log.Fatalf("ERROR: Service should be in path /var/lib/maxive/conf")
 			}
 
-			cfg.Rancher.ServicesInclude[service] = true
+			cfg.Maxive.ServicesInclude[service] = true
 			enabledServices = append(enabledServices, service)
 		}
 	}
@@ -180,14 +180,14 @@ func list(c *cli.Context) error {
 	cfg := config.LoadConfig()
 
 	clone := make(map[string]bool)
-	for service, enabled := range cfg.Rancher.ServicesInclude {
+	for service, enabled := range cfg.Maxive.ServicesInclude {
 		clone[service] = enabled
 	}
 
 	services := availableService(cfg, c.Bool("update"))
 
 	if c.Bool("all") {
-		for service := range cfg.Rancher.Services {
+		for service := range cfg.Maxive.Services {
 			fmt.Printf("enabled  %s\n", service)
 		}
 	}
@@ -241,13 +241,13 @@ func validateService(service string, cfg *config.CloudConfig) {
 
 func availableService(cfg *config.CloudConfig, update bool) []string {
 	if update {
-		err := network.UpdateCaches(cfg.Rancher.Repositories.ToArray(), "services")
+		err := network.UpdateCaches(cfg.Maxive.Repositories.ToArray(), "services")
 		if err != nil {
 			log.Debugf("Failed to update service caches: %v", err)
 		}
 
 	}
-	services, err := network.GetServices(cfg.Rancher.Repositories.ToArray())
+	services, err := network.GetServices(cfg.Maxive.Repositories.ToArray())
 	if err != nil {
 		log.Fatalf("Failed to get services: %v", err)
 	}

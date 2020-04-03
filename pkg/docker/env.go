@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
 
 	composeConfig "github.com/docker/libcompose/config"
 )
@@ -30,22 +30,22 @@ func appendEnv(array []string, key, value string) []string {
 }
 
 func environmentFromCloudConfig(cfg *config.CloudConfig) map[string]string {
-	environment := cfg.Rancher.Environment
-	if cfg.Rancher.Network.HTTPProxy != "" {
-		environment["http_proxy"] = cfg.Rancher.Network.HTTPProxy
-		environment["HTTP_PROXY"] = cfg.Rancher.Network.HTTPProxy
+	environment := cfg.Maxive.Environment
+	if cfg.Maxive.Network.HTTPProxy != "" {
+		environment["http_proxy"] = cfg.Maxive.Network.HTTPProxy
+		environment["HTTP_PROXY"] = cfg.Maxive.Network.HTTPProxy
 	}
-	if cfg.Rancher.Network.HTTPSProxy != "" {
-		environment["https_proxy"] = cfg.Rancher.Network.HTTPSProxy
-		environment["HTTPS_PROXY"] = cfg.Rancher.Network.HTTPSProxy
+	if cfg.Maxive.Network.HTTPSProxy != "" {
+		environment["https_proxy"] = cfg.Maxive.Network.HTTPSProxy
+		environment["HTTPS_PROXY"] = cfg.Maxive.Network.HTTPSProxy
 	}
-	if cfg.Rancher.Network.NoProxy != "" {
-		environment["no_proxy"] = cfg.Rancher.Network.NoProxy
-		environment["NO_PROXY"] = cfg.Rancher.Network.NoProxy
+	if cfg.Maxive.Network.NoProxy != "" {
+		environment["no_proxy"] = cfg.Maxive.Network.NoProxy
+		environment["NO_PROXY"] = cfg.Maxive.Network.NoProxy
 	}
 	if v := config.GetKernelVersion(); v != "" {
 		environment["KERNEL_VERSION"] = v
-		log.Debugf("Using /proc/version to set rancher.environment.KERNEL_VERSION = %s", v)
+		log.Debugf("Using /proc/version to set maxive.environment.KERNEL_VERSION = %s", v)
 	}
 	return environment
 }

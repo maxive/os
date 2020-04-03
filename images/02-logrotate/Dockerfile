@@ -1,4 +1,4 @@
-FROM rancher/os-base
+FROM maxive/os-base
 COPY . /
 RUN chmod 644 /etc/logrotate.conf
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]

@@ -1,5 +1,5 @@
 // Copyright 2015 CoreOS, Inc.
-// Copyright 2015-2017 Rancher Labs, Inc.
+// Copyright 2015-2017 Maxive Labs, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,30 +24,30 @@ import (
 	"sync"
 	"time"
 
-	"github.com/rancher/os/cmd/control"
-	"github.com/rancher/os/cmd/network"
-	rancherConfig "github.com/rancher/os/config"
-	"github.com/rancher/os/config/cloudinit/config"
-	"github.com/rancher/os/config/cloudinit/datasource"
-	"github.com/rancher/os/config/cloudinit/datasource/configdrive"
-	"github.com/rancher/os/config/cloudinit/datasource/file"
-	"github.com/rancher/os/config/cloudinit/datasource/metadata/aliyun"
-	"github.com/rancher/os/config/cloudinit/datasource/metadata/azure"
-	"github.com/rancher/os/config/cloudinit/datasource/metadata/cloudstack"
-	"github.com/rancher/os/config/cloudinit/datasource/metadata/digitalocean"
-	"github.com/rancher/os/config/cloudinit/datasource/metadata/ec2"
-	"github.com/rancher/os/config/cloudinit/datasource/metadata/exoscale"
-	"github.com/rancher/os/config/cloudinit/datasource/metadata/gce"
-	"github.com/rancher/os/config/cloudinit/datasource/metadata/packet"
-	"github.com/rancher/os/config/cloudinit/datasource/proccmdline"
-	"github.com/rancher/os/config/cloudinit/datasource/proxmox"
-	"github.com/rancher/os/config/cloudinit/datasource/tftp"
-	"github.com/rancher/os/config/cloudinit/datasource/url"
-	"github.com/rancher/os/config/cloudinit/datasource/vmware"
-	"github.com/rancher/os/config/cloudinit/pkg"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/netconf"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/cmd/control"
+	"github.com/maxive/os/cmd/network"
+	rancherConfig "github.com/maxive/os/config"
+	"github.com/maxive/os/config/cloudinit/config"
+	"github.com/maxive/os/config/cloudinit/datasource"
+	"github.com/maxive/os/config/cloudinit/datasource/configdrive"
+	"github.com/maxive/os/config/cloudinit/datasource/file"
+	"github.com/maxive/os/config/cloudinit/datasource/metadata/aliyun"
+	"github.com/maxive/os/config/cloudinit/datasource/metadata/azure"
+	"github.com/maxive/os/config/cloudinit/datasource/metadata/cloudstack"
+	"github.com/maxive/os/config/cloudinit/datasource/metadata/digitalocean"
+	"github.com/maxive/os/config/cloudinit/datasource/metadata/ec2"
+	"github.com/maxive/os/config/cloudinit/datasource/metadata/exoscale"
+	"github.com/maxive/os/config/cloudinit/datasource/metadata/gce"
+	"github.com/maxive/os/config/cloudinit/datasource/metadata/packet"
+	"github.com/maxive/os/config/cloudinit/datasource/proccmdline"
+	"github.com/maxive/os/config/cloudinit/datasource/proxmox"
+	"github.com/maxive/os/config/cloudinit/datasource/tftp"
+	"github.com/maxive/os/config/cloudinit/datasource/url"
+	"github.com/maxive/os/config/cloudinit/datasource/vmware"
+	"github.com/maxive/os/config/cloudinit/pkg"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/netconf"
+	"github.com/maxive/os/pkg/util"
 
 	yaml "github.com/cloudfoundry-incubator/candiedyaml"
 )
@@ -80,11 +80,11 @@ func saveCloudConfig() error {
 	log.Infof("SaveCloudConfig")
 
 	cfg := rancherConfig.LoadConfig()
-	log.Debugf("init: SaveCloudConfig(pre ApplyNetworkConfig): %#v", cfg.Rancher.Network)
+	log.Debugf("init: SaveCloudConfig(pre ApplyNetworkConfig): %#v", cfg.Maxive.Network)
 	network.ApplyNetworkConfig(cfg)
 
-	log.Infof("datasources that will be considered: %#v", cfg.Rancher.CloudInit.Datasources)
-	dss := getDatasources(cfg.Rancher.CloudInit.Datasources)
+	log.Infof("datasources that will be considered: %#v", cfg.Maxive.CloudInit.Datasources)
+	dss := getDatasources(cfg.Maxive.CloudInit.Datasources)
 	if len(dss) == 0 {
 		log.Errorf("currentDatasource - none found")
 		return nil
@@ -95,7 +95,7 @@ func saveCloudConfig() error {
 
 	// Apply any newly detected network config.
 	cfg = rancherConfig.LoadConfig()
-	log.Debugf("init: SaveCloudConfig(post ApplyNetworkConfig): %#v", cfg.Rancher.Network)
+	log.Debugf("init: SaveCloudConfig(post ApplyNetworkConfig): %#v", cfg.Maxive.Network)
 	network.ApplyNetworkConfig(cfg)
 
 	return nil
@@ -144,11 +144,11 @@ func saveFiles(cloudConfigBytes, scriptBytes []byte, metadata datasource.Metadat
 		Network netconf.NetworkConfig `yaml:"network,omitempty"`
 	}
 	type nonCfg struct {
-		Rancher nonRancherCfg `yaml:"rancher,omitempty"`
+		Maxive nonRancherCfg `yaml:"maxive,omitempty"`
 	}
 	// write the network.yml file from metadata
 	cc := nonCfg{
-		Rancher: nonRancherCfg{
+		Maxive: nonRancherCfg{
 			Network: metadata.NetworkConfig,
 		},
 	}
@@ -288,9 +288,9 @@ func getDatasources(datasources []string) []datasource.Datasource {
 
 func enableDoLinkLocal() {
 	cfg := rancherConfig.LoadConfig()
-	dhcpTimeout := cfg.Rancher.Defaults.Network.DHCPTimeout
-	if cfg.Rancher.Network.DHCPTimeout > 0 {
-		dhcpTimeout = cfg.Rancher.Network.DHCPTimeout
+	dhcpTimeout := cfg.Maxive.Defaults.Network.DHCPTimeout
+	if cfg.Maxive.Network.DHCPTimeout > 0 {
+		dhcpTimeout = cfg.Maxive.Network.DHCPTimeout
 	}
 	_, err := netconf.ApplyNetworkConfigs(&netconf.NetworkConfig{
 		Interfaces: map[string]netconf.InterfaceConfig{
@@ -376,7 +376,7 @@ func composeToCloudConfig(bytes []byte) ([]byte, error) {
 	}
 
 	return yaml.Marshal(map[interface{}]interface{}{
-		"rancher": map[interface{}]interface{}{
+		"maxive": map[interface{}]interface{}{
 			"services": compose,
 		},
 	})

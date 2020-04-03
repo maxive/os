@@ -22,14 +22,14 @@ echo "mkdir -p ${DIST}/boot/isolinux/"
 mkdir -p ${DIST}/boot/isolinux/
 cat scripts/isolinux.cfg | envsubst > ${DIST}/boot/isolinux/isolinux.cfg
 cat scripts/isolinux_label.cfg | LABEL=${VERSION} envsubst > ${DIST}/boot/linux-current.cfg
-#cat scripts/isolinux_label.cfg | LABEL=debug APPEND="rancher.debug=true" envsubst > ${DIST}/boot/linux-previous.cfg
+#cat scripts/isolinux_label.cfg | LABEL=debug APPEND="maxive.debug=true" envsubst > ${DIST}/boot/linux-previous.cfg
 if [ "$OS_AUTOFORMAT" = "true" ]; then
-    APPEND_AUTOFORMAT="rancher.state.autoformat=[/dev/sda,/dev/vda] rancher.state.dev=LABEL=RANCHER_STATE rancher.state.wait=true"
+    APPEND_AUTOFORMAT="maxive.state.autoformat=[/dev/sda,/dev/vda] maxive.state.dev=LABEL=RANCHER_STATE maxive.state.wait=true"
     cat scripts/global.cfg | APPEND="$APPEND_AUTOFORMAT" envsubst > ${DIST}/boot/global.cfg
 else
     cat scripts/global.cfg | envsubst > ${DIST}/boot/global.cfg
 fi
-cp scripts/rancher.png ${DIST}/boot/
+cp scripts/maxive.png ${DIST}/boot/
 
 
 mkdir -p ./scripts/installer/build/boot

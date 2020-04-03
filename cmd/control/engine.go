@@ -10,15 +10,15 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/rancher/os/cmd/control/service"
-	"github.com/rancher/os/cmd/control/service/app"
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/compose"
-	"github.com/rancher/os/pkg/docker"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
-	"github.com/rancher/os/pkg/util/network"
-	"github.com/rancher/os/pkg/util/versions"
+	"github.com/maxive/os/cmd/control/service"
+	"github.com/maxive/os/cmd/control/service/app"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/compose"
+	"github.com/maxive/os/pkg/docker"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
+	"github.com/maxive/os/pkg/util/network"
+	"github.com/maxive/os/pkg/util/versions"
 
 	yaml "github.com/cloudfoundry-incubator/candiedyaml"
 	"github.com/codegangsta/cli"
@@ -148,8 +148,8 @@ func engineSwitch(c *cli.Context) error {
 		log.Fatal(err)
 	}
 
-	if err := config.Set("rancher.docker.engine", newEngine); err != nil {
-		log.Errorf("Failed to update rancher.docker.engine: %v", err)
+	if err := config.Set("maxive.docker.engine", newEngine); err != nil {
+		log.Errorf("Failed to update maxive.docker.engine: %v", err)
 	}
 
 	return nil
@@ -175,8 +175,8 @@ func engineCreate(c *cli.Context) error {
 	// stage engine service
 	cfg := config.LoadConfig()
 	var enabledServices []string
-	if val, ok := cfg.Rancher.ServicesInclude[name]; !ok || !val {
-		cfg.Rancher.ServicesInclude[name] = true
+	if val, ok := cfg.Maxive.ServicesInclude[name]; !ok || !val {
+		cfg.Maxive.ServicesInclude[name] = true
 		enabledServices = append(enabledServices, name)
 	}
 
@@ -185,7 +185,7 @@ func engineCreate(c *cli.Context) error {
 			log.Fatal(err)
 		}
 
-		if err := config.Set("rancher.services_include", cfg.Rancher.ServicesInclude); err != nil {
+		if err := config.Set("maxive.services_include", cfg.Maxive.ServicesInclude); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -232,13 +232,13 @@ func dindEngineRemove(c *cli.Context) error {
 	}
 
 	// 3. service delete
-	if _, ok := cfg.Rancher.ServicesInclude[name]; !ok {
+	if _, ok := cfg.Maxive.ServicesInclude[name]; !ok {
 		log.Fatalf("Failed to found enabled service %s", name)
 	}
 
-	delete(cfg.Rancher.ServicesInclude, name)
+	delete(cfg.Maxive.ServicesInclude, name)
 
-	if err = config.Set("rancher.services_include", cfg.Rancher.ServicesInclude); err != nil {
+	if err = config.Set("maxive.services_include", cfg.Maxive.ServicesInclude); err != nil {
 		log.Fatal(err)
 	}
 
@@ -270,8 +270,8 @@ func engineEnable(c *cli.Context) error {
 		return err
 	}
 
-	if err := config.Set("rancher.docker.engine", newEngine); err != nil {
-		log.Errorf("Failed to update 'rancher.docker.engine': %v", err)
+	if err := config.Set("maxive.docker.engine", newEngine); err != nil {
+		log.Errorf("Failed to update 'maxive.docker.engine': %v", err)
 	}
 
 	return nil
@@ -285,7 +285,7 @@ func engineList(c *cli.Context) error {
 	for _, engine := range engines {
 		if engine == currentEngine {
 			fmt.Printf("current  %s\n", engine)
-		} else if engine == cfg.Rancher.Docker.Engine {
+		} else if engine == cfg.Maxive.Docker.Engine {
 			fmt.Printf("enabled  %s\n", engine)
 		} else {
 			fmt.Printf("disabled %s\n", engine)
@@ -330,13 +330,13 @@ func validateEngine(engine string, cfg *config.CloudConfig) {
 
 func availableEngines(cfg *config.CloudConfig, update bool) []string {
 	if update {
-		err := network.UpdateCaches(cfg.Rancher.Repositories.ToArray(), "engines")
+		err := network.UpdateCaches(cfg.Maxive.Repositories.ToArray(), "engines")
 		if err != nil {
 			log.Debugf("Failed to update engine caches: %v", err)
 		}
 
 	}
-	engines, err := network.GetEngines(cfg.Rancher.Repositories.ToArray())
+	engines, err := network.GetEngines(cfg.Maxive.Repositories.ToArray())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -398,7 +398,7 @@ func preFlightValidate(c *cli.Context) error {
 	authorizedKeys := c.String("authorized-keys")
 	if authorizedKeys != "" {
 		if _, err := os.Stat(authorizedKeys); os.IsNotExist(err) {
-			return errors.New("The authorized-keys should be an exist file, recommended to put in the /opt or /var/lib/rancher directory")
+			return errors.New("The authorized-keys should be an exist file, recommended to put in the /opt or /var/lib/maxive directory")
 		}
 	}
 
@@ -517,8 +517,8 @@ func generateEngineCompose(name, version string, sshPort int, authorizedKeys, ne
 			"--host=unix://" + config.MultiDockerDataDir + "/" + name + "/docker-" + name + ".sock",
 		},
 		Labels: composeYaml.SliceorMap{
-			"io.rancher.os.scope":     "system",
-			"io.rancher.os.after":     "console",
+			"io.maxive.os.scope":     "system",
+			"io.maxive.os.after":     "console",
 			config.UserDockerLabel:    name,
 			config.UserDockerNetLabel: network,
 			config.UserDockerFIPLabel: fixedIP,

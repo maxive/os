@@ -94,9 +94,9 @@ func TestMerge(t *testing.T) {
 func TestCmdLineStr(t *testing.T) {
 	assert := require.New(t)
 
-	cmdLine := `rancher.cloud_init.datasources=[\'url:http://192.168.1.100/cloud-config\']`
-	assert.Equal("rancher.cloud_init.datasources=['url:http://192.168.1.100/cloud-config']", UnescapeKernelParams(cmdLine))
+	cmdLine := `maxive.cloud_init.datasources=[\'url:http://192.168.1.100/cloud-config\']`
+	assert.Equal("maxive.cloud_init.datasources=['url:http://192.168.1.100/cloud-config']", UnescapeKernelParams(cmdLine))
 
-	cmdLine = `rancher.cloud_init.datasources=[\"url:http://192.168.1.100/cloud-config\"]`
-	assert.Equal(`rancher.cloud_init.datasources=["url:http://192.168.1.100/cloud-config"]`, UnescapeKernelParams(cmdLine))
+	cmdLine = `maxive.cloud_init.datasources=[\"url:http://192.168.1.100/cloud-config\"]`
+	assert.Equal(`maxive.cloud_init.datasources=["url:http://192.168.1.100/cloud-config"]`, UnescapeKernelParams(cmdLine))
 }

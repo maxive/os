@@ -5,11 +5,11 @@ import (
 	"os/exec"
 	"syscall"
 
-	"github.com/rancher/os/cmd/cloudinitexecute"
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/docker"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/cmd/cloudinitexecute"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/docker"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
 
 	"github.com/codegangsta/cli"
 	"golang.org/x/net/context"
@@ -17,7 +17,7 @@ import (
 
 const (
 	ca     = "/etc/ssl/certs/ca-certificates.crt"
-	caBase = "/etc/ssl/certs/ca-certificates.crt.rancher"
+	caBase = "/etc/ssl/certs/ca-certificates.crt.maxive"
 )
 
 func entrypointAction(c *cli.Context) error {

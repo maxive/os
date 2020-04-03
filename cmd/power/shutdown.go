@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"syscall"
 
-	"github.com/rancher/os/cmd/control/install"
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/cmd/control/install"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
 
 	"github.com/codegangsta/cli"
 )
@@ -29,9 +29,9 @@ func Shutdown() {
 	app := cli.NewApp()
 
 	app.Name = filepath.Base(os.Args[0])
-	app.Usage = fmt.Sprintf("%s RancherOS\nbuilt: %s", app.Name, config.BuildDate)
+	app.Usage = fmt.Sprintf("%s MaxiveOS\nbuilt: %s", app.Name, config.BuildDate)
 	app.Version = config.Version
-	app.Author = "Rancher Labs, Inc."
+	app.Author = "Maxive Labs, Inc."
 	app.EnableBashCompletion = true
 	app.Action = shutdown
 	app.Flags = []cli.Flag{
@@ -125,12 +125,12 @@ func Shutdown() {
 		// OR? maybe implement it as a `kexec` cli tool?
 		app.Flags = append(app.Flags, cli.BoolFlag{
 			Name:        "kexec",
-			Usage:       "kexec the default RancherOS cfg",
+			Usage:       "kexec the default MaxiveOS cfg",
 			Destination: &kexecFlag,
 		})
 		app.Flags = append(app.Flags, cli.BoolFlag{
 			Name:        "kexec-previous",
-			Usage:       "kexec the previous RancherOS cfg",
+			Usage:       "kexec the previous MaxiveOS cfg",
 			Destination: &previouskexecFlag,
 		})
 		app.Flags = append(app.Flags, cli.StringFlag{

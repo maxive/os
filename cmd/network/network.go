@@ -10,11 +10,11 @@ import (
 	"syscall"
 	"text/template"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/docker"
-	"github.com/rancher/os/pkg/hostname"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/netconf"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/docker"
+	"github.com/maxive/os/pkg/hostname"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/netconf"
 
 	"github.com/docker/libnetwork/resolvconf"
 	"golang.org/x/net/context"
@@ -52,25 +52,25 @@ func Main() {
 
 func ApplyNetworkConfig(cfg *config.CloudConfig) {
 	log.Infof("Apply Network Config")
-	userSetDNS := len(cfg.Rancher.Network.DNS.Nameservers) > 0 || len(cfg.Rancher.Network.DNS.Search) > 0
+	userSetDNS := len(cfg.Maxive.Network.DNS.Nameservers) > 0 || len(cfg.Maxive.Network.DNS.Search) > 0
 
 	if err := hostname.SetHostnameFromCloudConfig(cfg); err != nil {
 		log.Errorf("Failed to set hostname from cloud config: %v", err)
 	}
 
 	userSetHostname := cfg.Hostname != ""
-	if cfg.Rancher.Network.DHCPTimeout <= 0 {
-		cfg.Rancher.Network.DHCPTimeout = cfg.Rancher.Defaults.Network.DHCPTimeout
+	if cfg.Maxive.Network.DHCPTimeout <= 0 {
+		cfg.Maxive.Network.DHCPTimeout = cfg.Maxive.Defaults.Network.DHCPTimeout
 	}
 
 	// In order to handle the STATIC mode in Wi-Fi network, we have to update the dhcpcd.conf file.
 	// https://wiki.archlinux.org/index.php/dhcpcd#Static_profile
-	if len(cfg.Rancher.Network.WifiNetworks) > 0 {
+	if len(cfg.Maxive.Network.WifiNetworks) > 0 {
 		generateDhcpcdFiles(cfg)
 		generateWpaFiles(cfg)
 	}
 
-	dhcpSetDNS, err := netconf.ApplyNetworkConfigs(&cfg.Rancher.Network, userSetHostname, userSetDNS)
+	dhcpSetDNS, err := netconf.ApplyNetworkConfigs(&cfg.Maxive.Network, userSetHostname, userSetDNS)
 	if err != nil {
 		log.Errorf("Failed to apply network configs(by netconf): %v", err)
 	}
@@ -83,17 +83,17 @@ func ApplyNetworkConfig(cfg *config.CloudConfig) {
 		// only write 8.8.8.8,8.8.4.4 as a last resort
 		log.Infof("Writing default resolv.conf - no user setting, and no DHCP setting")
 		if _, err := resolvconf.Build("/etc/resolv.conf",
-			cfg.Rancher.Defaults.Network.DNS.Nameservers,
-			cfg.Rancher.Defaults.Network.DNS.Search,
+			cfg.Maxive.Defaults.Network.DNS.Nameservers,
+			cfg.Maxive.Defaults.Network.DNS.Search,
 			nil); err != nil {
 			log.Errorf("Failed to write resolv.conf (!userSetDNS and !dhcpSetDNS): %v", err)
 		}
 	}
 	if userSetDNS {
-		if _, err := resolvconf.Build("/etc/resolv.conf", cfg.Rancher.Network.DNS.Nameservers, cfg.Rancher.Network.DNS.Search, nil); err != nil {
+		if _, err := resolvconf.Build("/etc/resolv.conf", cfg.Maxive.Network.DNS.Nameservers, cfg.Maxive.Network.DNS.Search, nil); err != nil {
 			log.Errorf("Failed to write resolv.conf (userSetDNS): %v", err)
 		} else {
-			log.Infof("writing to /etc/resolv.conf: nameservers: %v, search: %v", cfg.Rancher.Network.DNS.Nameservers, cfg.Rancher.Network.DNS.Search)
+			log.Infof("writing to /etc/resolv.conf: nameservers: %v, search: %v", cfg.Maxive.Network.DNS.Nameservers, cfg.Maxive.Network.DNS.Search)
 		}
 	}
 
@@ -107,8 +107,8 @@ func ApplyNetworkConfig(cfg *config.CloudConfig) {
 }
 
 func generateDhcpcdFiles(cfg *config.CloudConfig) {
-	networks := cfg.Rancher.Network.WifiNetworks
-	interfaces := cfg.Rancher.Network.Interfaces
+	networks := cfg.Maxive.Network.WifiNetworks
+	interfaces := cfg.Maxive.Network.Interfaces
 	configs := make(map[string]netconf.WifiNetworkConfig)
 	for k, v := range interfaces {
 		if c, ok := networks[v.WifiNetwork]; ok && c.Address != "" {
@@ -129,8 +129,8 @@ func generateDhcpcdFiles(cfg *config.CloudConfig) {
 }
 
 func generateWpaFiles(cfg *config.CloudConfig) {
-	networks := cfg.Rancher.Network.WifiNetworks
-	interfaces := cfg.Rancher.Network.Interfaces
+	networks := cfg.Maxive.Network.WifiNetworks
+	interfaces := cfg.Maxive.Network.Interfaces
 	for k, v := range interfaces {
 		if v.WifiNetwork != "" {
 			configs := make(map[string]netconf.WifiNetworkConfig)

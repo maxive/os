@@ -5,10 +5,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
-	"github.com/rancher/os/pkg/util/network"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
+	"github.com/maxive/os/pkg/util/network"
 
 	yaml "github.com/cloudfoundry-incubator/candiedyaml"
 )
@@ -36,7 +36,7 @@ func GetCacheImageList(cloudconfig string, oldcfg *config.CloudConfig) []string 
 	}
 
 	// services_include
-	for key, value := range newcfg.Rancher.ServicesInclude {
+	for key, value := range newcfg.Maxive.ServicesInclude {
 		if value {
 			serviceImage := getServiceImage(key, "", oldcfg, newcfg)
 			if serviceImage != "" {
@@ -46,7 +46,7 @@ func GetCacheImageList(cloudconfig string, oldcfg *config.CloudConfig) []string 
 	}
 
 	// console
-	newConsole := newcfg.Rancher.Console
+	newConsole := newcfg.Maxive.Console
 	if newConsole != "" && newConsole != "default" {
 		consoleImage := getServiceImage(newConsole, "console", oldcfg, newcfg)
 		if consoleImage != "" {
@@ -55,8 +55,8 @@ func GetCacheImageList(cloudconfig string, oldcfg *config.CloudConfig) []string 
 	}
 
 	// docker engine
-	newEngine := newcfg.Rancher.Docker.Engine
-	if newEngine != "" && newEngine != oldcfg.Rancher.Docker.Engine {
+	newEngine := newcfg.Maxive.Docker.Engine
+	if newEngine != "" && newEngine != oldcfg.Maxive.Docker.Engine {
 		engineImage := getServiceImage(newEngine, "docker", oldcfg, newcfg)
 		if engineImage != "" {
 			savedImages = append(savedImages, engineImage)
@@ -73,7 +73,7 @@ func getServiceImage(service, svctype string, oldcfg, newcfg *config.CloudConfig
 		bytes        []byte
 		err          error
 	)
-	if len(newcfg.Rancher.Repositories.ToArray()) > 0 {
+	if len(newcfg.Maxive.Repositories.ToArray()) > 0 {
 		bytes, err = network.LoadServiceResource(service, true, newcfg)
 	} else {
 		bytes, err = network.LoadServiceResource(service, true, oldcfg)
@@ -117,9 +117,9 @@ func readConfigFile(file string) ([]byte, error) {
 }
 
 func formatImage(image string, oldcfg, newcfg *config.CloudConfig) string {
-	registryDomain := newcfg.Rancher.Environment["REGISTRY_DOMAIN"]
+	registryDomain := newcfg.Maxive.Environment["REGISTRY_DOMAIN"]
 	if registryDomain == "" {
-		registryDomain = oldcfg.Rancher.Environment["REGISTRY_DOMAIN"]
+		registryDomain = oldcfg.Maxive.Environment["REGISTRY_DOMAIN"]
 	}
 	image = strings.Replace(image, "${REGISTRY_DOMAIN}", registryDomain, -1)
 

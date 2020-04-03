@@ -12,12 +12,12 @@ import (
 	"syscall"
 	"text/template"
 
-	"github.com/rancher/os/cmd/cloudinitexecute"
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/config/cmdline"
-	"github.com/rancher/os/pkg/compose"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/cmd/cloudinitexecute"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/config/cmdline"
+	"github.com/maxive/os/pkg/compose"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
 
 	"github.com/codegangsta/cli"
 	"golang.org/x/crypto/ssh/terminal"
@@ -28,8 +28,8 @@ const (
 	consoleDone = "/run/console-done"
 	dockerHome  = "/home/docker"
 	gettyCmd    = "/sbin/agetty"
-	rancherHome = "/home/rancher"
-	startScript = "/opt/rancher/bin/start.sh"
+	rancherHome = "/home/maxive"
+	startScript = "/opt/maxive/bin/start.sh"
 	runLockDir  = "/run/lock"
 	sshdFile    = "/etc/ssh/sshd_config"
 	sshdTplFile = "/etc/ssh/sshd_config.tpl"
@@ -83,22 +83,22 @@ func consoleInitFunc() error {
 	}
 
 	ignorePassword := false
-	for _, d := range cfg.Rancher.Disable {
+	for _, d := range cfg.Maxive.Disable {
 		if d == "password" {
 			ignorePassword = true
 			break
 		}
 	}
 
-	password := cmdline.GetCmdline("rancher.password")
+	password := cmdline.GetCmdline("maxive.password")
 	if !ignorePassword && password != "" {
 		cmd := exec.Command("chpasswd")
-		cmd.Stdin = strings.NewReader(fmt.Sprint("rancher:", password))
+		cmd.Stdin = strings.NewReader(fmt.Sprint("maxive:", password))
 		if err := cmd.Run(); err != nil {
 			log.Error(err)
 		}
 
-		cmd = exec.Command("bash", "-c", `sed -E -i 's/(rancher:.*:).*(:.*:.*:.*:.*:.*:.*)$/\1\2/' /etc/shadow`)
+		cmd = exec.Command("bash", "-c", `sed -E -i 's/(maxive:.*:).*(:.*:.*:.*:.*:.*:.*)$/\1\2/' /etc/shadow`)
 		if err := cmd.Run(); err != nil {
 			log.Error(err)
 		}
@@ -108,7 +108,7 @@ func consoleInitFunc() error {
 		log.Error(err)
 	}
 
-	if err := writeRespawn("rancher", cfg.Rancher.SSH.Daemon, false); err != nil {
+	if err := writeRespawn("maxive", cfg.Maxive.SSH.Daemon, false); err != nil {
 		log.Error(err)
 	}
 
@@ -145,7 +145,7 @@ func consoleInitFunc() error {
 		})
 	}
 
-	if cfg.Rancher.Console == "default" {
+	if cfg.Maxive.Console == "default" {
 		// add iptables symlinks for default console
 		baseSymlink = append(baseSymlink, []symlink{
 			{"/usr/sbin/iptables", "/usr/sbin/iptables-save"},
@@ -181,7 +181,7 @@ func consoleInitFunc() error {
 	// maybe write these on the host and bindmount into everywhere?
 	proxyLines := []string{}
 	for _, k := range []string{"http_proxy", "HTTP_PROXY", "https_proxy", "HTTPS_PROXY", "no_proxy", "NO_PROXY"} {
-		if v, ok := cfg.Rancher.Environment[k]; ok {
+		if v, ok := cfg.Maxive.Environment[k]; ok {
 			proxyLines = append(proxyLines, fmt.Sprintf("export %s=%q", k, v))
 		}
 	}
@@ -197,7 +197,7 @@ func consoleInitFunc() error {
 	// write out a profile.d file for the PATH settings.
 	pathLines := []string{}
 	for _, k := range []string{"PATH", "path"} {
-		if v, ok := cfg.Rancher.Environment[k]; ok {
+		if v, ok := cfg.Maxive.Environment[k]; ok {
 			for _, p := range strings.Split(v, ",") {
 				pathLines = append(pathLines, fmt.Sprintf("export PATH=$PATH:%s", strings.TrimSpace(p)))
 			}
@@ -254,7 +254,7 @@ func generateRespawnConf(cmdline, user string, sshd, recovery bool) string {
 	config := config.LoadConfig()
 
 	allowAutoLogin := true
-	for _, d := range config.Rancher.Disable {
+	for _, d := range config.Maxive.Disable {
 		if d == "autologin" {
 			allowAutoLogin = false
 			break
@@ -268,7 +268,7 @@ func generateRespawnConf(cmdline, user string, sshd, recovery bool) string {
 		}
 
 		respawnConf.WriteString(gettyCmd)
-		if allowAutoLogin && strings.Contains(cmdline, fmt.Sprintf("rancher.autologin=%s", tty)) {
+		if allowAutoLogin && strings.Contains(cmdline, fmt.Sprintf("maxive.autologin=%s", tty)) {
 			respawnConf.WriteString(fmt.Sprintf(" -n -l %s -o %s:tty%d", autologinBin, user, i))
 		}
 		respawnConf.WriteString(fmt.Sprintf(" --noclear %s linux\n", tty))
@@ -284,7 +284,7 @@ func generateRespawnConf(cmdline, user string, sshd, recovery bool) string {
 		}
 
 		respawnConf.WriteString(gettyCmd)
-		if allowAutoLogin && strings.Contains(cmdline, fmt.Sprintf("rancher.autologin=%s", tty)) {
+		if allowAutoLogin && strings.Contains(cmdline, fmt.Sprintf("maxive.autologin=%s", tty)) {
 			respawnConf.WriteString(fmt.Sprintf(" -n -l %s -o %s:%s", autologinBin, user, tty))
 		}
 		respawnConf.WriteString(fmt.Sprintf(" %s\n", tty))
@@ -338,11 +338,11 @@ func modifySshdConfig(cfg *config.CloudConfig) error {
 		defer f.Close()
 
 		config := map[string]string{}
-		if cfg.Rancher.SSH.Port > 0 && cfg.Rancher.SSH.Port < 65355 {
-			config["Port"] = strconv.Itoa(cfg.Rancher.SSH.Port)
+		if cfg.Maxive.SSH.Port > 0 && cfg.Maxive.SSH.Port < 65355 {
+			config["Port"] = strconv.Itoa(cfg.Maxive.SSH.Port)
 		}
-		if cfg.Rancher.SSH.ListenAddress != "" {
-			config["ListenAddress"] = cfg.Rancher.SSH.ListenAddress
+		if cfg.Maxive.SSH.ListenAddress != "" {
+			config["ListenAddress"] = cfg.Maxive.SSH.ListenAddress
 		}
 
 		return sshdTpl.Execute(f, config)
@@ -362,8 +362,8 @@ func setupSSH(cfg *config.CloudConfig) error {
 			continue
 		}
 
-		saved, savedExists := cfg.Rancher.SSH.Keys[keyType]
-		pub, pubExists := cfg.Rancher.SSH.Keys[keyType+"-pub"]
+		saved, savedExists := cfg.Maxive.SSH.Keys[keyType]
+		pub, pubExists := cfg.Maxive.SSH.Keys[keyType+"-pub"]
 
 		if savedExists && pubExists {
 			// TODO check permissions
@@ -391,8 +391,8 @@ func setupSSH(cfg *config.CloudConfig) error {
 			return err
 		}
 
-		config.Set(fmt.Sprintf("rancher.ssh.keys.%s", keyType), string(savedBytes))
-		config.Set(fmt.Sprintf("rancher.ssh.keys.%s-pub", keyType), string(pubBytes))
+		config.Set(fmt.Sprintf("maxive.ssh.keys.%s", keyType), string(savedBytes))
+		config.Set(fmt.Sprintf("maxive.ssh.keys.%s-pub", keyType), string(pubBytes))
 	}
 
 	return os.MkdirAll("/var/run/sshd", 0644)

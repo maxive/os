@@ -9,11 +9,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/compose"
-	rosDocker "github.com/rancher/os/pkg/docker"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/compose"
+	rosDocker "github.com/maxive/os/pkg/docker"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
 
 	"github.com/codegangsta/cli"
 	composeClient "github.com/docker/libcompose/docker/client"
@@ -25,7 +25,7 @@ const (
 	defaultStorageContext = "console"
 	dockerPidFile         = "/var/run/docker.pid"
 	sourceDirectory       = "/engine"
-	destDirectory         = "/var/lib/rancher/engine"
+	destDirectory         = "/var/lib/maxive/engine"
 	dockerCompletionFName = "completion"
 )
 
@@ -118,21 +118,21 @@ func writeConfigCerts(cfg *config.CloudConfig) error {
 	caKeyPath := filepath.Join(outDir, CaKey)
 	serverCertPath := filepath.Join(outDir, ServerCert)
 	serverKeyPath := filepath.Join(outDir, ServerKey)
-	if cfg.Rancher.Docker.CACert != "" {
-		if err := util.WriteFileAtomic(caCertPath, []byte(cfg.Rancher.Docker.CACert), 0400); err != nil {
+	if cfg.Maxive.Docker.CACert != "" {
+		if err := util.WriteFileAtomic(caCertPath, []byte(cfg.Maxive.Docker.CACert), 0400); err != nil {
 			return err
 		}
 
-		if err := util.WriteFileAtomic(caKeyPath, []byte(cfg.Rancher.Docker.CAKey), 0400); err != nil {
+		if err := util.WriteFileAtomic(caKeyPath, []byte(cfg.Maxive.Docker.CAKey), 0400); err != nil {
 			return err
 		}
 	}
-	if cfg.Rancher.Docker.ServerCert != "" {
-		if err := util.WriteFileAtomic(serverCertPath, []byte(cfg.Rancher.Docker.ServerCert), 0400); err != nil {
+	if cfg.Maxive.Docker.ServerCert != "" {
+		if err := util.WriteFileAtomic(serverCertPath, []byte(cfg.Maxive.Docker.ServerCert), 0400); err != nil {
 			return err
 		}
 
-		if err := util.WriteFileAtomic(serverKeyPath, []byte(cfg.Rancher.Docker.ServerKey), 0400); err != nil {
+		if err := util.WriteFileAtomic(serverKeyPath, []byte(cfg.Maxive.Docker.ServerKey), 0400); err != nil {
 			return err
 		}
 	}
@@ -140,7 +140,7 @@ func writeConfigCerts(cfg *config.CloudConfig) error {
 }
 
 func startDocker(cfg *config.CloudConfig) error {
-	storageContext := cfg.Rancher.Docker.StorageContext
+	storageContext := cfg.Maxive.Docker.StorageContext
 	if storageContext == "" {
 		storageContext = defaultStorageContext
 	}
@@ -164,7 +164,7 @@ func startDocker(cfg *config.CloudConfig) error {
 		return err
 	}
 
-	dockerCfg := cfg.Rancher.Docker
+	dockerCfg := cfg.Maxive.Docker
 
 	args := dockerCfg.FullArgs()
 

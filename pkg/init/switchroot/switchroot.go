@@ -8,10 +8,10 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/dfs"
-	"github.com/rancher/os/pkg/init/fsmount"
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/dfs"
+	"github.com/maxive/os/pkg/init/fsmount"
+	"github.com/maxive/os/pkg/log"
 
 	"github.com/docker/docker/pkg/archive"
 )
@@ -20,8 +20,8 @@ func SwitchRoot(cfg *config.CloudConfig) (*config.CloudConfig, error) {
 	if !fsmount.ShouldSwitchRoot {
 		return cfg, nil
 	}
-	log.Debugf("Switching to new root at %s %s", config.StateDir, cfg.Rancher.State.Directory)
-	if err := switchRoot(config.StateDir, cfg.Rancher.State.Directory, cfg.Rancher.RmUsr); err != nil {
+	log.Debugf("Switching to new root at %s %s", config.StateDir, cfg.Maxive.State.Directory)
+	if err := switchRoot(config.StateDir, cfg.Maxive.State.Directory, cfg.Maxive.RmUsr); err != nil {
 		return cfg, err
 	}
 	return cfg, nil
@@ -30,7 +30,7 @@ func SwitchRoot(cfg *config.CloudConfig) (*config.CloudConfig, error) {
 func cleanupTarget(rootfs, targetUsr, usr, usrVer, tmpDir string) (bool, error) {
 	log.Debugf("Deleting %s", targetUsr)
 	if err := os.Remove(targetUsr); err != nil && !os.IsNotExist(err) {
-		log.Errorf("Failed to delete %s, possibly invalid RancherOS state partition: %v", targetUsr, err)
+		log.Errorf("Failed to delete %s, possibly invalid MaxiveOS state partition: %v", targetUsr, err)
 		return false, err
 	}
 

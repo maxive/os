@@ -7,11 +7,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/pkg/log"
 )
 
 const (
-	cacheDirectory = "/var/lib/rancher/cache/"
+	cacheDirectory = "/var/lib/maxive/cache/"
 )
 
 func locationHash(location string) string {

@@ -10,11 +10,11 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/rancher/os/cmd/control"
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/compose"
-	"github.com/rancher/os/pkg/docker"
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/cmd/control"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/compose"
+	"github.com/maxive/os/pkg/docker"
+	"github.com/maxive/os/pkg/log"
 
 	"github.com/docker/engine-api/types"
 	"github.com/docker/libcompose/project/options"
@@ -22,8 +22,8 @@ import (
 )
 
 const (
-	systemImagesPreloadDirectory = "/var/lib/rancher/preload/system-docker"
-	systemImagesLoadStamp        = "/var/lib/rancher/.sysimages_%s_loaded.done"
+	systemImagesPreloadDirectory = "/var/lib/maxive/preload/system-docker"
+	systemImagesLoadStamp        = "/var/lib/maxive/.sysimages_%s_loaded.done"
 )
 
 func hasImage(name string) bool {
@@ -111,7 +111,7 @@ func SysInit() error {
 					Create: options.Create{
 						NoRecreate: true,
 					},
-					Log: cfg.Rancher.Log,
+					Log: cfg.Maxive.Log,
 				})
 			}},
 			{"sync", func(cfg *config.CloudConfig) (*config.CloudConfig, error) {
@@ -119,7 +119,7 @@ func SysInit() error {
 				return cfg, nil
 			}},
 			{"banner", func(cfg *config.CloudConfig) (*config.CloudConfig, error) {
-				log.Infof("RancherOS %s started", config.Version)
+				log.Infof("MaxiveOS %s started", config.Version)
 				return cfg, nil
 			}}})
 	return err
@@ -128,7 +128,7 @@ func SysInit() error {
 func loadServicesCache() {
 	// this code make sure the open-vm-tools, modem-manager... services can be started correct when there is no network
 	// make sure the cache directory exist
-	if err := os.MkdirAll("/var/lib/rancher/cache/", os.ModeDir|0755); err != nil {
+	if err := os.MkdirAll("/var/lib/maxive/cache/", os.ModeDir|0755); err != nil {
 		log.Errorf("Create service cache diretory error: %v", err)
 	}
 
@@ -139,7 +139,7 @@ func loadServicesCache() {
 			log.Errorf("Read file error: %v", err)
 		}
 		for _, f := range files {
-			err := os.Rename("/usr/share/ros/services-cache/"+f.Name(), "/var/lib/rancher/cache/"+f.Name())
+			err := os.Rename("/usr/share/ros/services-cache/"+f.Name(), "/var/lib/maxive/cache/"+f.Name())
 			if err != nil {
 				log.Errorf("Rename file error: %v", err)
 			}

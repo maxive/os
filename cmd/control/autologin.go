@@ -8,8 +8,8 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
 
 	"github.com/codegangsta/cli"
 )
@@ -21,8 +21,8 @@ func AutologinMain() {
 	app.Name = os.Args[0]
 	app.Usage = "autologin console"
 	app.Version = config.Version
-	app.Author = "Rancher Labs, Inc."
-	app.Email = "sven@rancher.com"
+	app.Author = "Maxive Labs, Inc."
+	app.Email = "sven@maxive.com"
 	app.EnableBashCompletion = true
 	app.Action = autologinAction
 	app.HideHelp = true
@@ -57,7 +57,7 @@ func autologinAction(c *cli.Context) error {
 	// replace \n and \l
 	banner := config.Banner
 	banner = strings.Replace(banner, "\\v", config.Version, -1)
-	banner = strings.Replace(banner, "\\s", "RancherOS "+runtime.GOARCH, -1)
+	banner = strings.Replace(banner, "\\s", "MaxiveOS "+runtime.GOARCH, -1)
 	banner = strings.Replace(banner, "\\r", config.GetKernelVersion(), -1)
 	banner = strings.Replace(banner, "\\n", cfg.Hostname, -1)
 	banner = strings.Replace(banner, "\\l", tty, -1)
@@ -70,7 +70,7 @@ func autologinAction(c *cli.Context) error {
 	args := []string{}
 	if console == "centos" || console == "fedora" ||
 		mode == "recovery" {
-		// For some reason, centos and fedora ttyS0 and tty1 don't work with `login -f rancher`
+		// For some reason, centos and fedora ttyS0 and tty1 don't work with `login -f maxive`
 		// until I make time to read their source, lets just give us a way to get work done
 		loginBin = "bash"
 		args = append(args, "--login")

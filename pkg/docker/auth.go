@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
 
 	"github.com/docker/docker/registry"
 	"github.com/docker/engine-api/types"
@@ -73,7 +73,7 @@ func (c *ConfigAuthLookup) Lookup(repoInfo *registry.RepositoryInfo) types.AuthC
 }
 
 func (c *ConfigAuthLookup) All() map[string]types.AuthConfig {
-	registryAuths := c.cfg.Rancher.RegistryAuths
+	registryAuths := c.cfg.Maxive.RegistryAuths
 	if c.dockerConfigAuthLookup != nil {
 		for registry, authConfig := range c.dockerConfigAuthLookup.All() {
 			registryAuths[registry] = authConfig

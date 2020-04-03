@@ -8,7 +8,7 @@ Changelog
 - Swarm option configuration (ability to configure all swarm options)
 - New Provisioning system to allow for greater flexibility and stability for installing and configuring Docker
 - New Provisioners
-  - Rancher OS
+  - Maxive OS
   - RedHat Enterprise Linux 7.0+ (experimental)
   - Fedora 21+ (experimental)
   - Debian 8+ (experimental)
@@ -69,7 +69,7 @@ contributors for outstanding contributions to the project:
 
 - @frapposelli for VMware updates and fixes
 - @hairyhenderson for several improvements to Softlayer driver, inspect formatting and lots of fixes
-- @ibuildthecloud for rancher os provisioning
+- @ibuildthecloud for maxive os provisioning
 - @sthulb for portable SSH library                                              
 - @vincentbernat for exoscale                                                   
 - @zchee for Amazon updates and great doc updates

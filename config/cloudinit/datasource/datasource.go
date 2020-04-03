@@ -17,7 +17,7 @@ package datasource
 import (
 	"net"
 
-	"github.com/rancher/os/pkg/netconf"
+	"github.com/maxive/os/pkg/netconf"
 )
 
 type Datasource interface {

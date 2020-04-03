@@ -9,11 +9,11 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/rancher/os/config/cloudinit/datasource"
-	"github.com/rancher/os/config/cloudinit/initialize"
-	"github.com/rancher/os/config/cmdline"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/config/cloudinit/datasource"
+	"github.com/maxive/os/config/cloudinit/initialize"
+	"github.com/maxive/os/config/cmdline"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
 
 	yaml "github.com/cloudfoundry-incubator/candiedyaml"
 	"github.com/docker/engine-api/types"
@@ -94,7 +94,7 @@ func loadRawConfigWithError(dirPrefix string, full bool) (map[interface{}]interf
 func LoadConfig() *CloudConfig {
 	cfg := LoadConfigWithPrefix("")
 
-	if cfg.Rancher.Debug {
+	if cfg.Maxive.Debug {
 		log.SetDefaultLevel(log.DebugLevel)
 	} else {
 		log.SetDefaultLevel(log.InfoLevel)
@@ -162,8 +162,8 @@ func SaveInitCmdline(cmdLineArgs string) {
 	elidedCfg := cmdline.Parse(cmdLineArgs, false)
 
 	env := Insert(make(map[interface{}]interface{}), interface{}("EXTRA_CMDLINE"), interface{}(cmdLineArgs))
-	rancher := Insert(make(map[interface{}]interface{}), interface{}("environment"), env)
-	newCfg := Insert(elidedCfg, interface{}("rancher"), rancher)
+	maxive := Insert(make(map[interface{}]interface{}), interface{}("environment"), env)
+	newCfg := Insert(elidedCfg, interface{}("maxive"), maxive)
 	// make it easy for readElidedCmdline(rawCfg)
 	newCfg = Insert(newCfg, interface{}("EXTRA_CMDLINE"), interface{}(cmdLineArgs))
 
@@ -202,15 +202,15 @@ func applyDebugFlags(rawCfg map[interface{}]interface{}) map[interface{}]interfa
 		return rawCfg
 	}
 
-	if !cfg.Rancher.Debug {
+	if !cfg.Maxive.Debug {
 		return rawCfg
 	}
 
 	log.SetLevel(log.DebugLevel)
-	_, rawCfg = cmdline.GetOrSetVal("rancher.docker.debug", rawCfg, true)
-	_, rawCfg = cmdline.GetOrSetVal("rancher.system_docker.debug", rawCfg, true)
-	_, rawCfg = cmdline.GetOrSetVal("rancher.bootstrap_docker.debug", rawCfg, true)
-	_, rawCfg = cmdline.GetOrSetVal("rancher.log", rawCfg, true)
+	_, rawCfg = cmdline.GetOrSetVal("maxive.docker.debug", rawCfg, true)
+	_, rawCfg = cmdline.GetOrSetVal("maxive.system_docker.debug", rawCfg, true)
+	_, rawCfg = cmdline.GetOrSetVal("maxive.bootstrap_docker.debug", rawCfg, true)
+	_, rawCfg = cmdline.GetOrSetVal("maxive.log", rawCfg, true)
 
 	return rawCfg
 }
@@ -252,7 +252,7 @@ func mergeMetadata(rawCfg map[interface{}]interface{}, md datasource.Metadata) m
 
 	out["ssh_authorized_keys"] = finalKeys
 
-	rancherOut, _ := out["rancher"].(map[interface{}]interface{})
+	rancherOut, _ := out["maxive"].(map[interface{}]interface{})
 	if _, ok := rancherOut["resize_device"]; md.RootDisk != "" && !ok {
 		rancherOut["resize_device"] = md.RootDisk
 	}
@@ -284,31 +284,31 @@ func readElidedCmdline(rawCfg map[interface{}]interface{}) map[interface{}]inter
 
 func amendNils(c *CloudConfig) *CloudConfig {
 	t := *c
-	if t.Rancher.Environment == nil {
-		t.Rancher.Environment = map[string]string{}
+	if t.Maxive.Environment == nil {
+		t.Maxive.Environment = map[string]string{}
 	}
-	if t.Rancher.BootstrapContainers == nil {
-		t.Rancher.BootstrapContainers = map[string]*composeConfig.ServiceConfigV1{}
+	if t.Maxive.BootstrapContainers == nil {
+		t.Maxive.BootstrapContainers = map[string]*composeConfig.ServiceConfigV1{}
 	}
-	if t.Rancher.Services == nil {
-		t.Rancher.Services = map[string]*composeConfig.ServiceConfigV1{}
+	if t.Maxive.Services == nil {
+		t.Maxive.Services = map[string]*composeConfig.ServiceConfigV1{}
 	}
-	if t.Rancher.ServicesInclude == nil {
-		t.Rancher.ServicesInclude = map[string]bool{}
+	if t.Maxive.ServicesInclude == nil {
+		t.Maxive.ServicesInclude = map[string]bool{}
 	}
-	if t.Rancher.RegistryAuths == nil {
-		t.Rancher.RegistryAuths = map[string]types.AuthConfig{}
+	if t.Maxive.RegistryAuths == nil {
+		t.Maxive.RegistryAuths = map[string]types.AuthConfig{}
 	}
-	if t.Rancher.Sysctl == nil {
-		t.Rancher.Sysctl = map[string]string{}
+	if t.Maxive.Sysctl == nil {
+		t.Maxive.Sysctl = map[string]string{}
 	}
 	return &t
 }
 
 func amendContainerNames(c *CloudConfig) *CloudConfig {
 	for _, scm := range []map[string]*composeConfig.ServiceConfigV1{
-		c.Rancher.BootstrapContainers,
-		c.Rancher.Services,
+		c.Maxive.BootstrapContainers,
+		c.Maxive.Services,
 	} {
 		for k, v := range scm {
 			v.ContainerName = k

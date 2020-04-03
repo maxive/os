@@ -5,11 +5,11 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/rancher/os/config"
-	rosDocker "github.com/rancher/os/pkg/docker"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
-	"github.com/rancher/os/pkg/util/network"
+	"github.com/maxive/os/config"
+	rosDocker "github.com/maxive/os/pkg/docker"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
+	"github.com/maxive/os/pkg/util/network"
 
 	yaml "github.com/cloudfoundry-incubator/candiedyaml"
 	dockerClient "github.com/docker/engine-api/client"
@@ -55,7 +55,7 @@ func RunServiceSet(name string, cfg *config.CloudConfig, configs map[string]*com
 		return nil, err
 	}
 	return p, p.Up(context.Background(), options.Up{
-		Log: cfg.Rancher.Log,
+		Log: cfg.Maxive.Log,
 	})
 }
 

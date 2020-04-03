@@ -1,7 +1,7 @@
 package docker
 
 import (
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/pkg/util"
 
 	composeConfig "github.com/docker/libcompose/config"
 	"github.com/docker/libcompose/docker"
@@ -14,7 +14,7 @@ type ServiceFactory struct {
 }
 
 func (s *ServiceFactory) Create(project *project.Project, name string, serviceConfig *composeConfig.ServiceConfig) (project.Service, error) {
-	if after := serviceConfig.Labels["io.rancher.os.after"]; after != "" {
+	if after := serviceConfig.Labels["io.maxive.os.after"]; after != "" {
 		for _, dep := range util.TrimSplit(after, ",") {
 			if dep == "cloud-init" {
 				dep = "cloud-init-execute"
@@ -22,7 +22,7 @@ func (s *ServiceFactory) Create(project *project.Project, name string, serviceCo
 			s.Deps[name] = append(s.Deps[name], dep)
 		}
 	}
-	if before := serviceConfig.Labels["io.rancher.os.before"]; before != "" {
+	if before := serviceConfig.Labels["io.maxive.os.before"]; before != "" {
 		for _, dep := range util.TrimSplit(before, ",") {
 			if dep == "cloud-init" {
 				dep = "cloud-init-execute"

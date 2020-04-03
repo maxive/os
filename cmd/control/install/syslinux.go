@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/pkg/log"
 )
 
 func syslinuxConfig(menu BootVars) error {
@@ -17,12 +17,12 @@ func syslinuxConfig(menu BootVars) error {
 
 	filetmpl, err := template.New("syslinuxconfig").Parse(`{{define "syslinuxmenu"}}
 LABEL {{.Name}}
-    LINUX ../vmlinuz-{{.Version}}-rancheros
+    LINUX ../vmlinuz-{{.Version}}-maxiveos
     APPEND {{.KernelArgs}} {{.Append}}
-    INITRD ../initrd-{{.Version}}-rancheros
+    INITRD ../initrd-{{.Version}}-maxiveos
 {{end}}
 TIMEOUT 20   #2 seconds
-DEFAULT RancherOS-current
+DEFAULT MaxiveOS-current
 
 {{- range .Entries}}
 {{template "syslinuxmenu" .}}
@@ -69,7 +69,7 @@ func ReadSyslinuxCfg(currentCfg string) (string, string, error) {
 	vmlinuzFile := ""
 	initrdFile := ""
 	// Need to parse currentCfg for the lines:
-	// KERNEL ../vmlinuz-4.9.18-rancher^M
+	// KERNEL ../vmlinuz-4.9.18-maxive^M
 	// INITRD ../initrd-41e02e6-dirty^M
 	buf, err := ioutil.ReadFile(currentCfg)
 	if err != nil {

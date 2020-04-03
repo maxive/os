@@ -511,13 +511,13 @@ func (c *Container) createContainer(ctx context.Context, imageName, oldContainer
 	if configWrapper.HostConfig.NetworkMode != "" && configWrapper.HostConfig.NetworkMode.IsUserDefined() {
 		if networkConfig == nil {
 			// check user docker label, assign the user define ipv4 address
-			if _, ok := configWrapper.Config.Labels["io.rancher.user_docker.fix_ip"]; ok {
+			if _, ok := configWrapper.Config.Labels["io.maxive.user_docker.fix_ip"]; ok {
 				networkConfig = &network.NetworkingConfig{
 					EndpointsConfig: map[string]*network.EndpointSettings{
 						string(configWrapper.HostConfig.NetworkMode): {
-							IPAddress: configWrapper.Config.Labels["io.rancher.user_docker.fix_ip"],
+							IPAddress: configWrapper.Config.Labels["io.maxive.user_docker.fix_ip"],
 							IPAMConfig: &network.EndpointIPAMConfig{
-								IPv4Address: configWrapper.Config.Labels["io.rancher.user_docker.fix_ip"],
+								IPv4Address: configWrapper.Config.Labels["io.maxive.user_docker.fix_ip"],
 							},
 						},
 					},

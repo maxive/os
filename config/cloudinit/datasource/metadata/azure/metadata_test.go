@@ -6,9 +6,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/rancher/os/config/cloudinit/datasource"
-	"github.com/rancher/os/config/cloudinit/datasource/metadata"
-	"github.com/rancher/os/config/cloudinit/datasource/metadata/test"
+	"github.com/maxive/os/config/cloudinit/datasource"
+	"github.com/maxive/os/config/cloudinit/datasource/metadata"
+	"github.com/maxive/os/config/cloudinit/datasource/metadata/test"
 )
 
 func TestType(t *testing.T) {
@@ -50,7 +50,7 @@ func TestFetchMetadata(t *testing.T) {
 	"compute": {
 		"azEnvironment": "AZUREPUBLICCLOUD",
 		"location": "westus",
-		"name": "rancheros",
+		"name": "maxiveos",
 		"offer": "",
 		"osType": "Linux",
 		"placementGroupId": "",
@@ -64,10 +64,10 @@ func TestFetchMetadata(t *testing.T) {
 		"provider": "Microsoft.Compute",
 		"publicKeys": [{
 			"keyData":"publickey1",
-			"path": "/home/rancher/.ssh/authorized_keys"
+			"path": "/home/maxive/.ssh/authorized_keys"
 		}],
 		"publisher": "",
-		"resourceGroupName": "rancheros",
+		"resourceGroupName": "maxiveos",
 		"sku": "Enterprise",
 		"subscriptionId": "xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx",
 		"tags": "",
@@ -104,7 +104,7 @@ func TestFetchMetadata(t *testing.T) {
 				SSHPublicKeys: map[string]string{
 					"0": "publickey1",
 				},
-				Hostname: "rancheros",
+				Hostname: "maxiveos",
 			},
 		},
 	} {

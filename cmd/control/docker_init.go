@@ -9,19 +9,19 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
 
 	"github.com/codegangsta/cli"
 )
 
 const (
-	dockerConf               = "/var/lib/rancher/conf/docker"
+	dockerConf               = "/var/lib/maxive/conf/docker"
 	dockerDone               = "/run/docker-done"
 	dockerLog                = "/var/log/docker.log"
 	dockerCompletionLinkFile = "/usr/share/bash-completion/completions/docker"
-	dockerCompletionFile     = "/var/lib/rancher/engine/completion"
+	dockerCompletionFile     = "/var/lib/maxive/engine/completion"
 )
 
 func dockerInitAction(c *cli.Context) error {
@@ -44,7 +44,7 @@ func dockerInitAction(c *cli.Context) error {
 		"/usr/bin",
 		"/opt/bin",
 		"/usr/local/bin",
-		"/var/lib/rancher/docker",
+		"/var/lib/maxive/docker",
 	}
 	for _, binPath := range dockerPaths {
 		if util.ExistsAndExecutable(path.Join(binPath, "dockerd")) {
@@ -96,7 +96,7 @@ func dockerInitAction(c *cli.Context) error {
 		}
 	}
 
-	err = checkZfsBackingFS(cfg.Rancher.Docker.StorageDriver, cfg.Rancher.Docker.Graph)
+	err = checkZfsBackingFS(cfg.Maxive.Docker.StorageDriver, cfg.Maxive.Docker.Graph)
 	if err != nil {
 		log.Fatal(err)
 	}

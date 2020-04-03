@@ -14,8 +14,8 @@ source ./scripts/version
 
 echo "---------------------------------"
 echo "ln -s /usr/bin/ros /usr/bin/cloud-init-save"
-echo "ros config set rancher.cloud_init.datasources [packet:https://metadata.packet.net/]"
-#echo "ros config set rancher.cloud_init.datasources [packet:https://192.80.8.124/]"
+echo "ros config set maxive.cloud_init.datasources [packet:https://metadata.packet.net/]"
+#echo "ros config set maxive.cloud_init.datasources [packet:https://192.80.8.124/]"
 echo "cloud-init-save"
 echo "---------------------------------"
 
@@ -24,6 +24,6 @@ docker run --rm -it \
     -v $(pwd)/bin/ros:/usr/bin/ros \
     -v /etc/ssl/certs:/etc/ssl/certs \
     -v /usr/share/ca-certificates:/usr/share/ca-certificates \
-    -w  /var/lib/rancher \
+    -w  /var/lib/maxive \
     --entrypoint sh \
-    rancher/os-base:v1.0.3
+    maxive/os-base:v1.0.3

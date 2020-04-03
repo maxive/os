@@ -21,8 +21,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/rancher/os/config/cloudinit/pkg"
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/config/cloudinit/pkg"
+	"github.com/maxive/os/pkg/log"
 )
 
 type Service struct {

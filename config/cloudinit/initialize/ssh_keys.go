@@ -18,8 +18,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/rancher/os/config/cloudinit/pkg"
-	"github.com/rancher/os/config/cloudinit/system"
+	"github.com/maxive/os/config/cloudinit/pkg"
+	"github.com/maxive/os/config/cloudinit/system"
 )
 
 type UserKey struct {

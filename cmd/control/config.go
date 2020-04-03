@@ -12,9 +12,9 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
 
 	yaml "github.com/cloudfoundry-incubator/candiedyaml"
 	"github.com/codegangsta/cli"
@@ -102,10 +102,10 @@ func configSubcommands() []cli.Command {
 func imagesFromConfig(cfg *config.CloudConfig) []string {
 	imagesMap := map[string]int{}
 
-	for _, service := range cfg.Rancher.BootstrapContainers {
+	for _, service := range cfg.Maxive.BootstrapContainers {
 		imagesMap[service.Image] = 1
 	}
-	for _, service := range cfg.Rancher.Services {
+	for _, service := range cfg.Maxive.Services {
 		imagesMap[service.Image] = 1
 	}
 
@@ -176,7 +176,7 @@ func editSyslinux(c *cli.Context) error {
 		"-v", "/:/host",
 		"-w", "/host",
 		"--entrypoint=vi",
-		"rancher/os-console:"+config.Version,
+		"maxive/os-console:"+config.Version,
 		"boot/global.cfg")
 	cmd.Stdout, cmd.Stderr, cmd.Stdin = os.Stdout, os.Stderr, os.Stdin
 	return cmd.Run()

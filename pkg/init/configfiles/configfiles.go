@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
 )
 
 var (
@@ -62,7 +62,7 @@ func WriteConfigFiles(cfg *config.CloudConfig) (*config.CloudConfig, error) {
 	for name, content := range ConfigFiles {
 		dirMode := os.ModeDir | 0755
 		fileMode := os.FileMode(0444)
-		if strings.HasPrefix(name, "/var/lib/rancher/conf/") {
+		if strings.HasPrefix(name, "/var/lib/maxive/conf/") {
 			// only make the conf files harder to get to
 			dirMode = os.ModeDir | 0700
 			if name == config.CloudConfigScriptFile {

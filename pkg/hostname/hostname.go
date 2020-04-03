@@ -7,13 +7,13 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/rancher/os/config"
+	"github.com/maxive/os/config"
 )
 
 func SetHostnameFromCloudConfig(cc *config.CloudConfig) error {
 	var hostname string
 	if cc.Hostname == "" {
-		hostname = cc.Rancher.Defaults.Hostname
+		hostname = cc.Maxive.Defaults.Hostname
 	} else {
 		hostname = cc.Hostname
 	}

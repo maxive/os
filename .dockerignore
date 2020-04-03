@@ -16,3 +16,5 @@ tests/integration/.tox
 vendor/*/*/*/.git
 tmp
 docs/_site
+/kh
+

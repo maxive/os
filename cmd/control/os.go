@@ -8,13 +8,13 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/rancher/os/cmd/power"
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/compose"
-	"github.com/rancher/os/pkg/docker"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
-	"github.com/rancher/os/pkg/util/network"
+	"github.com/maxive/os/cmd/power"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/compose"
+	"github.com/maxive/os/pkg/docker"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
+	"github.com/maxive/os/pkg/util/network"
 
 	yaml "github.com/cloudfoundry-incubator/candiedyaml"
 	"github.com/codegangsta/cli"
@@ -155,7 +155,7 @@ func osMetaDataGet(c *cli.Context) error {
 	}
 
 	cfg := config.LoadConfig()
-	runningName := cfg.Rancher.Upgrade.Image + ":" + config.Version
+	runningName := cfg.Maxive.Upgrade.Image + ":" + config.Version
 	runningName = formatImage(runningName, cfg)
 
 	foundRunning := false
@@ -240,7 +240,7 @@ func osVersion(c *cli.Context) error {
 
 func startUpgradeContainer(image string, stage, force, reboot, kexec, upgradeConsole, debug bool, kernelArgs string) error {
 	command := []string{
-		"-t", "rancher-upgrade",
+		"-t", "maxive-upgrade",
 		"-r", config.Version,
 	}
 
@@ -257,7 +257,7 @@ func startUpgradeContainer(image string, stage, force, reboot, kexec, upgradeCon
 	}
 
 	if upgradeConsole {
-		if err := config.Set("rancher.force_console_rebuild", true); err != nil {
+		if err := config.Set("maxive.force_console_rebuild", true); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -339,5 +339,5 @@ func parseBody(body []byte) (*Images, error) {
 
 func getUpgradeURL() (string, error) {
 	cfg := config.LoadConfig()
-	return cfg.Rancher.Upgrade.URL, nil
+	return cfg.Maxive.Upgrade.URL, nil
 }

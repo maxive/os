@@ -8,9 +8,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/rancher/os/config"
-	httpRetry "github.com/rancher/os/config/cloudinit/pkg"
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/config"
+	httpRetry "github.com/maxive/os/config/cloudinit/pkg"
+	"github.com/maxive/os/pkg/log"
 
 	yaml "github.com/cloudfoundry-incubator/candiedyaml"
 	composeConfig "github.com/docker/libcompose/config"
@@ -61,35 +61,35 @@ func getServices(urls []string, key string) ([]string, error) {
 
 func SetProxyEnvironmentVariables() {
 	cfg := config.LoadConfig()
-	if cfg.Rancher.Network.HTTPProxy != "" {
-		err := os.Setenv("HTTP_PROXY", cfg.Rancher.Network.HTTPProxy)
+	if cfg.Maxive.Network.HTTPProxy != "" {
+		err := os.Setenv("HTTP_PROXY", cfg.Maxive.Network.HTTPProxy)
 		if err != nil {
 			log.Errorf("Unable to set HTTP_PROXY: %s", err)
 		}
 	}
-	if cfg.Rancher.Network.HTTPSProxy != "" {
-		err := os.Setenv("HTTPS_PROXY", cfg.Rancher.Network.HTTPSProxy)
+	if cfg.Maxive.Network.HTTPSProxy != "" {
+		err := os.Setenv("HTTPS_PROXY", cfg.Maxive.Network.HTTPSProxy)
 		if err != nil {
 			log.Errorf("Unable to set HTTPS_PROXY: %s", err)
 		}
 	}
-	if cfg.Rancher.Network.NoProxy != "" {
-		err := os.Setenv("NO_PROXY", cfg.Rancher.Network.NoProxy)
+	if cfg.Maxive.Network.NoProxy != "" {
+		err := os.Setenv("NO_PROXY", cfg.Maxive.Network.NoProxy)
 		if err != nil {
 			log.Errorf("Unable to set NO_PROXY: %s", err)
 		}
 	}
-	if cfg.Rancher.Network.HTTPProxy != "" {
-		config.Set("rancher.environment.http_proxy", cfg.Rancher.Network.HTTPProxy)
-		config.Set("rancher.environment.HTTP_PROXY", cfg.Rancher.Network.HTTPProxy)
+	if cfg.Maxive.Network.HTTPProxy != "" {
+		config.Set("maxive.environment.http_proxy", cfg.Maxive.Network.HTTPProxy)
+		config.Set("maxive.environment.HTTP_PROXY", cfg.Maxive.Network.HTTPProxy)
 	}
-	if cfg.Rancher.Network.HTTPSProxy != "" {
-		config.Set("rancher.environment.https_proxy", cfg.Rancher.Network.HTTPSProxy)
-		config.Set("rancher.environment.HTTPS_PROXY", cfg.Rancher.Network.HTTPSProxy)
+	if cfg.Maxive.Network.HTTPSProxy != "" {
+		config.Set("maxive.environment.https_proxy", cfg.Maxive.Network.HTTPSProxy)
+		config.Set("maxive.environment.HTTPS_PROXY", cfg.Maxive.Network.HTTPSProxy)
 	}
-	if cfg.Rancher.Network.NoProxy != "" {
-		config.Set("rancher.environment.no_proxy", cfg.Rancher.Network.NoProxy)
-		config.Set("rancher.environment.NO_PROXY", cfg.Rancher.Network.NoProxy)
+	if cfg.Maxive.Network.NoProxy != "" {
+		config.Set("maxive.environment.no_proxy", cfg.Maxive.Network.NoProxy)
+		config.Set("maxive.environment.NO_PROXY", cfg.Maxive.Network.NoProxy)
 	}
 }
 
@@ -112,7 +112,7 @@ func LoadFromNetwork(location string) ([]byte, error) {
 	net.DefaultResolver.PreferGo = true
 	cfg := config.LoadConfig()
 	client := httpRetry.NewHTTPClient()
-	client.MaxRetries = cfg.Rancher.HTTPLoadRetries
+	client.MaxRetries = cfg.Maxive.HTTPLoadRetries
 	log.Debugf("start trying LoadFromNetwork(%s)", location)
 	bytes, err := client.GetRetry(location)
 	if err != nil {
@@ -152,7 +152,7 @@ func LoadServiceResource(name string, useNetwork bool, cfg *config.CloudConfig) 
 		return nil, ErrNoNetwork
 	}
 
-	urls := cfg.Rancher.Repositories.ToArray()
+	urls := cfg.Maxive.Repositories.ToArray()
 	for _, url := range urls {
 		serviceURL := serviceURL(url, name)
 		bytes, err = LoadResource(serviceURL, useNetwork)

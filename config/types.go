@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/rancher/os/config/cloudinit/config"
-	"github.com/rancher/os/config/yaml"
-	"github.com/rancher/os/pkg/netconf"
+	"github.com/maxive/os/config/cloudinit/config"
+	"github.com/maxive/os/config/yaml"
+	"github.com/maxive/os/pkg/netconf"
 
 	"github.com/docker/engine-api/types"
 	composeConfig "github.com/docker/libcompose/config"
@@ -26,34 +26,34 @@ const (
 	UserImages       = "images-user.tar"
 	Debug            = false
 	SystemDockerBin  = "/usr/bin/system-dockerd"
-	DefaultDind      = "rancher/os-dind:17.12.1"
+	DefaultDind      = "maxive/os-dind:17.12.1"
 
-	DetachLabel        = "io.rancher.os.detach"
-	CreateOnlyLabel    = "io.rancher.os.createonly"
-	ReloadConfigLabel  = "io.rancher.os.reloadconfig"
-	ConsoleLabel       = "io.rancher.os.console"
-	ScopeLabel         = "io.rancher.os.scope"
+	DetachLabel        = "io.maxive.os.detach"
+	CreateOnlyLabel    = "io.maxive.os.createonly"
+	ReloadConfigLabel  = "io.maxive.os.reloadconfig"
+	ConsoleLabel       = "io.maxive.os.console"
+	ScopeLabel         = "io.maxive.os.scope"
 	RebuildLabel       = "io.docker.compose.rebuild"
-	UserDockerLabel    = "io.rancher.user_docker.name"
-	UserDockerNetLabel = "io.rancher.user_docker.net"
-	UserDockerFIPLabel = "io.rancher.user_docker.fix_ip"
+	UserDockerLabel    = "io.maxive.user_docker.name"
+	UserDockerNetLabel = "io.maxive.user_docker.net"
+	UserDockerFIPLabel = "io.maxive.user_docker.fix_ip"
 	System             = "system"
 
 	OsConfigFile           = "/usr/share/ros/os-config.yml"
-	VarRancherDir          = "/var/lib/rancher"
-	CloudConfigDir         = "/var/lib/rancher/conf/cloud-config.d"
-	CloudConfigInitFile    = "/var/lib/rancher/conf/cloud-config.d/init.yml"
-	CloudConfigBootFile    = "/var/lib/rancher/conf/cloud-config.d/boot.yml"
-	CloudConfigNetworkFile = "/var/lib/rancher/conf/cloud-config.d/network.yml"
-	CloudConfigScriptFile  = "/var/lib/rancher/conf/cloud-config-script"
-	MetaDataFile           = "/var/lib/rancher/conf/metadata"
-	CloudConfigFile        = "/var/lib/rancher/conf/cloud-config.yml"
+	VarRancherDir          = "/var/lib/maxive"
+	CloudConfigDir         = "/var/lib/maxive/conf/cloud-config.d"
+	CloudConfigInitFile    = "/var/lib/maxive/conf/cloud-config.d/init.yml"
+	CloudConfigBootFile    = "/var/lib/maxive/conf/cloud-config.d/boot.yml"
+	CloudConfigNetworkFile = "/var/lib/maxive/conf/cloud-config.d/network.yml"
+	CloudConfigScriptFile  = "/var/lib/maxive/conf/cloud-config-script"
+	MetaDataFile           = "/var/lib/maxive/conf/metadata"
+	CloudConfigFile        = "/var/lib/maxive/conf/cloud-config.yml"
 	EtcResolvConfFile      = "/etc/resolv.conf"
 	WPAConfigFile          = "/etc/wpa_supplicant-%s.conf"
 	WPATemplateFile        = "/etc/wpa_supplicant.conf.tpl"
 	DHCPCDConfigFile       = "/etc/dhcpcd.conf"
 	DHCPCDTemplateFile     = "/etc/dhcpcd.conf.tpl"
-	MultiDockerConfFile    = "/var/lib/rancher/conf.d/m-user-docker.yml"
+	MultiDockerConfFile    = "/var/lib/maxive/conf.d/m-user-docker.yml"
 	MultiDockerDataDir     = "/var/lib/m-user-docker"
 	UdevRulesDir           = "/etc/udev/rules.d"
 	UdevRulesExtrasDir     = "/lib/udev/rules-extras.d"
@@ -68,20 +68,20 @@ var (
 	OsRepo        string
 	OsBase        string
 	PrivateKeys   = []string{
-		"rancher.ssh",
-		"rancher.docker.ca_key",
-		"rancher.docker.ca_cert",
-		"rancher.docker.server_key",
-		"rancher.docker.server_cert",
+		"maxive.ssh",
+		"maxive.docker.ca_key",
+		"maxive.docker.ca_cert",
+		"maxive.docker.server_key",
+		"maxive.docker.server_cert",
 	}
 	Additional = []string{
-		"rancher.password",
-		"rancher.autologin",
+		"maxive.password",
+		"maxive.autologin",
 		"EXTRA_CMDLINE",
 	}
 	SupportedDinds = []string{
-		"rancher/os-dind:17.12.1",
-		"rancher/os-dind:18.03.1",
+		"maxive/os-dind:17.12.1",
+		"maxive/os-dind:18.03.1",
 	}
 )
 
@@ -111,7 +111,7 @@ type CloudConfig struct {
 	WriteFiles        []File                `yaml:"write_files,omitempty"`
 	Hostname          string                `yaml:"hostname,omitempty"`
 	Mounts            [][]string            `yaml:"mounts,omitempty"`
-	Rancher           RancherConfig         `yaml:"rancher,omitempty"`
+	Maxive           RancherConfig         `yaml:"maxive,omitempty"`
 	Runcmd            []yaml.StringandSlice `yaml:"runcmd,omitempty"`
 	Bootcmd           []yaml.StringandSlice `yaml:"bootcmd,omitempty"`
 }

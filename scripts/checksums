@@ -33,7 +33,7 @@ rancheros-vmware.vmdk
 rm -rf dist/checksums && mkdir -p dist/checksums
 pushd dist/checksums
 for file in $FILELIST; do
-    curl -sSL -o $file https://github.com/rancher/os/releases/download/$VERSION/$file
+    curl -sSL -o $file https://github.com/maxive/os/releases/download/$VERSION/$file
     for algo in sha256 md5; do
         echo "$algo: $(${algo}sum $file)" >> ../../$CHECKSUM
     done

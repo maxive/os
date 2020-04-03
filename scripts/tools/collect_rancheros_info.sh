@@ -2,16 +2,16 @@
 
 # How to use:
 #
-# 1. Login to your rancheros and switch to root
+# 1. Login to your maxiveos and switch to root
 #    $ sudo su - root
-# 2. Collecting rancheros information
-#    # curl https://raw.githubusercontent.com/rancher/os/master/scripts/tools/collect_rancheros_info.sh | sh
+# 2. Collecting maxiveos information
+#    # curl https://raw.githubusercontent.com/maxive/os/master/scripts/tools/collect_rancheros_info.sh | sh
 
 set -e
 # /var/log directory
 log_src_dir=/var/log
-# Rancher config file directory
-conf_file_src_dir=/var/lib/rancher/conf
+# Maxive config file directory
+conf_file_src_dir=/var/lib/maxive/conf
 # Os-config directory
 os_config_dir=/usr/share/ros/os-config.yml
 # Export directory
@@ -37,7 +37,7 @@ hiddenSshRsa(){
 
 # Export /var/log
 cp -arf $log_src_dir $dest_log_dir
-# Export rancheros config
+# Export maxiveos config
 ros c export -o $dest_conf_dir/ros-config-export.conf
 ros -v > $dest_conf_dir/ros-version
 uname -r > $dest_conf_dir/kernel-version
@@ -62,6 +62,6 @@ fi
 tar -c -f /tmp/rancheros_export_$ARCHIVE -C $dest_dir  . >/dev/null 2>&1
 
 echo "*********************************************************"
-echo "The RancherOS config and log are successfully exported."
+echo "The MaxiveOS config and log are successfully exported."
 echo "Please check the /tmp/rancheros_export_$ARCHIVE."
 echo "*********************************************************"

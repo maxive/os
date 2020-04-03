@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$(ros config get rancher.debug)" == "true" ]; then
+if [ "$(ros config get maxive.debug)" == "true" ]; then
 	echo "DHCPCD: $interface $reason" &>> /var/log/dhcpcd.debug.log
 	echo "$(date)" &>> /var/log/dhcpcd.debug.log
 	set | sed -ne 's/^new_//p' | sort &>> /var/log/dhcpcd.debug.log

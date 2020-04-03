@@ -18,7 +18,7 @@ import (
 	"errors"
 	"log"
 
-	"github.com/rancher/os/config/cloudinit/config"
+	"github.com/maxive/os/config/cloudinit/config"
 )
 
 var (

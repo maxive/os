@@ -1,10 +1,10 @@
-FROM rancher/os-rootfs
+FROM maxive/os-rootfs
 
 COPY . /
 
 RUN rm /sbin/poweroff /sbin/reboot /sbin/halt && \
     sed -i '/^root/s!/bin/sh!/bin/bash!' /etc/passwd && \
-    echo 'RancherOS \n \l' > /etc/issue && \
+    echo 'MaxiveOS \n \l' > /etc/issue && \
     rm -rf /run \
        /linuxrc \
        /etc/os-release \
@@ -23,13 +23,13 @@ RUN rm /sbin/poweroff /sbin/reboot /sbin/halt && \
        /var/run \
        /var/spool && \
     passwd -l root && \
-    addgroup -g 1100 rancher && \
+    addgroup -g 1100 maxive && \
     addgroup -g 1101 docker && \
     addgroup -g 1103 sudo && \
-    adduser -u 1100 -G rancher -D -h /home/rancher -s /bin/bash rancher && \
+    adduser -u 1100 -G maxive -D -h /home/maxive -s /bin/bash maxive && \
     adduser -u 1101 -G docker -D -h /home/docker -s /bin/bash docker && \
-    adduser rancher docker && \
-    adduser rancher sudo && \
+    adduser maxive docker && \
+    adduser maxive sudo && \
     adduser docker sudo && \
     echo '%sudo ALL=(ALL) ALL' >> /etc/sudoers && \
     ln -s /dev/null /etc/udev/rules.d/80-net-name-slot.rules && \

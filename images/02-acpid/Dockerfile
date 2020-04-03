@@ -1,2 +1,2 @@
-FROM rancher/os-base
+FROM maxive/os-base
 COPY . /

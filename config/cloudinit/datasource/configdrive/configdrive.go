@@ -22,9 +22,9 @@ import (
 	"path"
 	"syscall"
 
-	"github.com/rancher/os/config/cloudinit/datasource"
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/config/cloudinit/datasource"
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
 
 	"github.com/docker/docker/pkg/mount"
 )

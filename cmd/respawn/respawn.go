@@ -13,8 +13,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/log"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/log"
 
 	"github.com/codegangsta/cli"
 )
@@ -32,9 +32,9 @@ func Main() {
 	app := cli.NewApp()
 
 	app.Name = os.Args[0]
-	app.Usage = fmt.Sprintf("%s RancherOS\nbuilt: %s", app.Name, config.BuildDate)
+	app.Usage = fmt.Sprintf("%s MaxiveOS\nbuilt: %s", app.Name, config.BuildDate)
 	app.Version = config.Version
-	app.Author = "Rancher Labs, Inc."
+	app.Author = "Maxive Labs, Inc."
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{

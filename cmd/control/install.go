@@ -13,12 +13,12 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/rancher/os/cmd/control/install"
-	"github.com/rancher/os/cmd/power"
-	"github.com/rancher/os/config"
-	"github.com/rancher/os/pkg/dfs" // TODO: move CopyFile into util or something.
-	"github.com/rancher/os/pkg/log"
-	"github.com/rancher/os/pkg/util"
+	"github.com/maxive/os/cmd/control/install"
+	"github.com/maxive/os/cmd/power"
+	"github.com/maxive/os/config"
+	"github.com/maxive/os/pkg/dfs" // TODO: move CopyFile into util or something.
+	"github.com/maxive/os/pkg/log"
+	"github.com/maxive/os/pkg/util"
 
 	"github.com/codegangsta/cli"
 	"github.com/pkg/errors"
@@ -26,21 +26,21 @@ import (
 
 var installCommand = cli.Command{
 	Name:     "install",
-	Usage:    "install RancherOS to disk",
+	Usage:    "install MaxiveOS to disk",
 	HideHelp: true,
 	Action:   installAction,
 	Flags: []cli.Flag{
 		cli.StringFlag{
-			// TODO: need to validate ? -i rancher/os:v0.3.1 just sat there.
+			// TODO: need to validate ? -i maxive/os:v0.3.1 just sat there.
 			Name: "image, i",
-			Usage: `install from a certain image (e.g., 'rancher/os:v0.7.0')
+			Usage: `install from a certain image (e.g., 'maxive/os:v0.7.0')
 							use 'ros os list' to see what versions are available.`,
 		},
 		cli.StringFlag{
 			Name: "install-type, t",
-			Usage: `generic:    (Default) Creates 1 ext4 partition and installs RancherOS (syslinux)
-                        amazon-ebs: Installs RancherOS and sets up PV-GRUB
-                        gptsyslinux: partition and format disk (gpt), then install RancherOS and setup Syslinux
+			Usage: `generic:    (Default) Creates 1 ext4 partition and installs MaxiveOS (syslinux)
+                        amazon-ebs: Installs MaxiveOS and sets up PV-GRUB
+                        gptsyslinux: partition and format disk (gpt), then install MaxiveOS and setup Syslinux
                         `,
 		},
 		cli.StringFlag{
@@ -57,7 +57,7 @@ var installCommand = cli.Command{
 		},
 		cli.StringFlag{
 			Name:  "statedir",
-			Usage: "install to rancher.state.directory",
+			Usage: "install to maxive.state.directory",
 		},
 		cli.BoolFlag{
 			Name:  "force, f",
@@ -124,7 +124,7 @@ func installAction(c *cli.Context) error {
 	cfg := config.LoadConfig()
 	if image == "" {
 		image = fmt.Sprintf("%s:%s%s",
-			cfg.Rancher.Upgrade.Image,
+			cfg.Maxive.Upgrade.Image,
 			config.Version,
 			config.Suffix)
 		image = formatImage(image, cfg)
@@ -135,9 +135,9 @@ func installAction(c *cli.Context) error {
 		log.Info("No install type specified...defaulting to generic")
 		installType = "generic"
 	}
-	if installType == "rancher-upgrade" ||
+	if installType == "maxive-upgrade" ||
 		installType == "upgrade" {
-		installType = "upgrade" // rancher-upgrade is redundant!
+		installType = "upgrade" // maxive-upgrade is redundant!
 		force = true            // the os.go upgrade code already asks
 		reboot = false
 		isoinstallerloaded = true // OMG this flag is aweful - kill it with fire
@@ -223,23 +223,23 @@ func runInstall(image, installType, cloudConfig, device, partition, statedir, ka
 			if err = mountBootIso(deviceName, deviceType); err != nil {
 				log.Debugf("Failed to mountBootIso: %v", err)
 			} else {
-				log.Infof("trying to load /bootiso/rancheros/installer.tar.gz")
-				if _, err := os.Stat("/bootiso/rancheros/"); err == nil {
-					cmd := exec.Command("system-docker", "load", "-i", "/bootiso/rancheros/installer.tar.gz")
+				log.Infof("trying to load /bootiso/maxiveos/installer.tar.gz")
+				if _, err := os.Stat("/bootiso/maxiveos/"); err == nil {
+					cmd := exec.Command("system-docker", "load", "-i", "/bootiso/maxiveos/installer.tar.gz")
 					cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
 					if err := cmd.Run(); err != nil {
-						log.Infof("failed to load images from /bootiso/rancheros: %v", err)
+						log.Infof("failed to load images from /bootiso/maxiveos: %v", err)
 					} else {
-						log.Infof("Loaded images from /bootiso/rancheros/installer.tar.gz")
+						log.Infof("Loaded images from /bootiso/maxiveos/installer.tar.gz")
 
 						//TODO: add if os-installer:latest exists - we might have loaded a full installer?
 						useIso = true
 						// now use the installer image
 						cfg := config.LoadConfig()
 
-						if image == cfg.Rancher.Upgrade.Image+":"+config.Version+config.Suffix {
+						if image == cfg.Maxive.Upgrade.Image+":"+config.Version+config.Suffix {
 							// TODO: fix the fullinstaller Dockerfile to use the ${VERSION}${SUFFIX}
-							image = cfg.Rancher.Upgrade.Image + "-installer" + ":latest"
+							image = cfg.Maxive.Upgrade.Image + "-installer" + ":latest"
 						}
 					}
 				}
@@ -368,9 +368,9 @@ func getBootIso() (string, string, error) {
 	deviceName := "/dev/sr0"
 	deviceType := "iso9660"
 
-	// Our ISO LABEL is RancherOS
+	// Our ISO LABEL is MaxiveOS
 	// But some tools(like rufus) will change LABEL to RANCHEROS
-	for _, label := range []string{"RancherOS", "RANCHEROS"} {
+	for _, label := range []string{"MaxiveOS", "RANCHEROS"} {
 		d, t := getDeviceByLabel(label)
 		if d != "" {
 			deviceName = d
@@ -417,7 +417,7 @@ func layDownOS(image, installType, cloudConfig, device, partition, statedir, kap
 	// ENV == installType
 	//[[ "$ARCH" == "arm" && "$ENV" != "upgrade" ]] && ENV=arm
 
-	// image == rancher/os:v0.7.0_arm
+	// image == maxive/os:v0.7.0_arm
 	// TODO: remove the _arm suffix (but watch out, its not always there..)
 	VERSION := image[strings.Index(image, ":")+1:]
 
@@ -426,9 +426,9 @@ func layDownOS(image, installType, cloudConfig, device, partition, statedir, kap
 	//cloudConfig := SCRIPTS_DIR + "/conf/empty.yml" //${cloudConfig:-"${SCRIPTS_DIR}/conf/empty.yml"}
 	CONSOLE := "tty0"
 	baseName := "/mnt/new_img"
-	kernelArgs := "printk.devkmsg=on rancher.state.dev=LABEL=RANCHER_STATE rancher.state.wait panic=10" // console="+CONSOLE
+	kernelArgs := "printk.devkmsg=on maxive.state.dev=LABEL=RANCHER_STATE maxive.state.wait panic=10" // console="+CONSOLE
 	if statedir != "" {
-		kernelArgs = kernelArgs + " rancher.state.directory=" + statedir
+		kernelArgs = kernelArgs + " maxive.state.directory=" + statedir
 	}
 
 	// unmount on trap
@@ -521,9 +521,9 @@ func layDownOS(image, installType, cloudConfig, device, partition, statedir, kap
 		if err != nil {
 			return err
 		}
-		kernelArgs = kernelArgs + " rancher.cloud_init.datasources=[ec2,gce]"
-	case "rancher-upgrade":
-		installType = "upgrade" // rancher-upgrade is redundant
+		kernelArgs = kernelArgs + " maxive.cloud_init.datasources=[ec2,gce]"
+	case "maxive-upgrade":
+		installType = "upgrade" // maxive-upgrade is redundant
 		fallthrough
 	case "upgrade":
 		var err error
@@ -553,7 +553,7 @@ func layDownOS(image, installType, cloudConfig, device, partition, statedir, kap
 			Timeout:  0,
 			Fallback: 0, // need to be conditional on there being a 'rollback'?
 			Entries: []install.MenuEntry{
-				install.MenuEntry{"RancherOS-current", config.BootDir, VERSION, kernelArgs, kappend},
+				install.MenuEntry{"MaxiveOS-current", config.BootDir, VERSION, kernelArgs, kappend},
 			},
 		}
 		install.PvGrubConfig(menu)
@@ -582,7 +582,7 @@ func seedData(baseName, cloudData string, files []string) error {
 	}
 
 	stateSeedDir := "state_seed"
-	cloudConfigBase := "/var/lib/rancher/conf/cloud-config.d"
+	cloudConfigBase := "/var/lib/maxive/conf/cloud-config.d"
 	cloudConfigDir := ""
 
 	// If there is a separate boot partition, cloud-config should be written to RANCHER_STATE partition.
@@ -859,12 +859,12 @@ func upgradeBootloader(device, baseName, diskType string) error {
 				log.Infof("error read(%s / syslinux.cfg): %s", backupSyslinuxDir, err)
 			} else {
 				cfg := string(oldSyslinux)
-				//DEFAULT RancherOS-current
+				//DEFAULT MaxiveOS-current
 				//
-				//LABEL RancherOS-current
-				//    LINUX ../vmlinuz-v0.7.1-rancheros
-				//    APPEND rancher.state.dev=LABEL=RANCHER_STATE rancher.state.wait console=tty0 rancher.password=rancher
-				//    INITRD ../initrd-v0.7.1-rancheros
+				//LABEL MaxiveOS-current
+				//    LINUX ../vmlinuz-v0.7.1-maxiveos
+				//    APPEND maxive.state.dev=LABEL=RANCHER_STATE maxive.state.wait console=tty0 maxive.password=maxive
+				//    INITRD ../initrd-v0.7.1-maxiveos
 
 				cfg = strings.Replace(cfg, "current", "previous", -1)
 				// TODO consider removing the APPEND line - as the global.cfg should have the same result
