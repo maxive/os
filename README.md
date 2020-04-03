@@ -6,4 +6,5 @@
 
 Un sistema operativo superminimalista facil de ejecutar para contenedores en producción a escala masiva. MaxiveOS es un entorno que incluye solo la mínima cantidad de software requerido para ejecutar contenedores.
 
-Esto esta en fase Beta no garantizamos aun absolutamente nada
+Esto esta en fase Beta no garantizamos nada por ahora
+
